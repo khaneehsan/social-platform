@@ -166,8 +166,82 @@ h2 {
 }
 
   </style>
+
+<style>
+  :root {
+    --bg-color: #dff8e1;
+    --text-color: #000;
+    --box-bg: rgba(255, 255, 255, 0.95);
+    --link-bg: #fff;
+    --link-color: #333;
+  }
+
+  body.dark {
+    --bg-color: rgba(20, 20, 20, 0.85);
+    --text-color: #eee;
+    --box-bg: rgba(40, 40, 40, 0.95);
+    --link-bg: #333;
+    --link-color: #eee;
+    backdrop-filter: brightness(0.6);
+  }
+
+  body {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    transition: background-color 0.4s, color 0.4s;
+  }
+
+  .link {
+    background: var(--link-bg) !important;
+    color: var(--link-color) !important;
+  }
+
+  .link a {
+    color: var(--link-color) !important;
+  }
+
+  .contact-box {
+    background: var(--box-bg) !important;
+    color: var(--text-color) !important;
+  }
+
+  .contact-box a, .contact-box p, h2, .contact-box h3 {
+    color: var(--text-color) !important;
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #444;
+    color: white;
+    font-size: 16px;
+    z-index: 1000;
+  }
+</style>
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+  }
+
+  window.onload = () => {
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+    }
+  };
+</script>
+
 </head>
 <body>
+
+  <button class="theme-toggle" onclick="toggleTheme()">🌙  / ☀️</button>
+
   <div class="profile">
     <img src="https://itehsan.github.io/khaneehsan/logo.png" alt="Logo" />
     <h2>خانه احسان دریچه ای به زندگی پاک</h2>
