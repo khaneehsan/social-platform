@@ -19,11 +19,21 @@
   text-align: center;
   padding: 40px;
   direction: rtl;
-  backdrop-filter: brightness(0.5);
+  backdrop-filter: brightness(0.9);
   margin: 0;
   font-size: 20px;
   font-weight: 600;
 }
+
+  /* لایهٔ نیمه‌شفاف روی تصویر برای خوانایی بیشتر متن */
+    body::after{
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: rgba(0,0,0,0.25); /* برای تیره‌تر کردن اندکی؛ عدد را کم یا زیاد کن */
+      pointer-events: none;
+    }
    
    .profile {
       margin-bottom: 20px;
