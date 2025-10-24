@@ -1,8 +1,10 @@
-<!DOCTYPE html><html lang="fa">
+<!DOCTYPE html>
+<html lang="fa">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ارتباط با خانه احسان</title>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <style>
     @font-face {
       font-family: 'AdobeArabic';
@@ -177,6 +179,20 @@ h2 {
   display: inline-block;
 }
 
+#views {
+  font-size: 20px;
+  margin-top: 12px;
+  color: #005f8c;
+  font-weight: bold;
+  text-align: center;
+  background: rgba(255,255,255,0.9);
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#views-error { font-size:14px;color:#a00;margin-top:8px; display:none; }
   </style>
 
 <style>
@@ -257,7 +273,13 @@ h2 {
   <div class="profile">
     <img src="https://khaneehsan.github.io/social-platform/logo.png" alt="Logo" />
     <h2>خانه احسان دریچه ای به زندگی پاک</h2>
-  </div>  <div class="link">
+
+    <!-- شمارنده قرار می‌گیرد اینجا -->
+    <div id="views">👁️ بازدیدها: در حال بارگذاری...</div>
+    <div id="views-error"></div>
+  </div>
+
+  <div class="link">
     <img src="https://cdn-icons-png.flaticon.com/512/84/84410.png" alt="Website Icon" />
     <a href="http://www.khaneehsan.com" target="_blank">خرید از فروشگاه اینترنتی خانه احسان</a>
   </div>  <div class="link">
@@ -323,8 +345,44 @@ h2 {
 </iframe>
 </div>
   </a>
-</body>
-</html>
-  </a>
+
+  <script>
+    // تابع کمکی برای نمایش خطا و لاگ
+    function showError(msg){ console.error('[ViewCounter] '+msg); document.getElementById('views-error').innerText = msg; document.getElementById('views-error').style.display='block'; }
+
+    // ابتدا تلاش می‌کنیم از countapi استفاده کنیم
+    const key = 'khaneehsan.github.io/social-platform'; // اگر مسیر صفحه‌ات فرق دارد اینجا را عوض کن
+    const countapi_url = 'https://api.countapi.xyz/hit/' + encodeURIComponent(key);
+
+    fetch(countapi_url, {cache:'no-store'})
+      .then(res => {
+        if(!res.ok) throw new Error('status ' + res.status);
+        return res.json();
+      })
+      .then(data => {
+        if (data && typeof data.value === 'number') {
+          document.getElementById('views').innerText = '👁️ بازدیدها: ' + data.value;
+        } else {
+          throw new Error('پاسخ نامعتبر از countapi');
+        }
+      })
+      .catch(err => {
+        // اگر countapi با خطا مواجه شد، یک fallback امتحان می‌کنیم (hits.seeyoufarm)
+        console.warn('[ViewCounter] countapi failed, trying fallback:', err);
+        fetch('https://hits.seeyoufarm.com/api/count/incr/bastebandi-ehsan.social-platform/visits?dontUpdate=true', {cache:'no-store'})
+          .then(r=> { if(!r.ok) throw new Error('fallback status '+r.status); return r.json(); })
+          .then(j=>{
+            if (j && (j.value || j.value===0)) {
+              document.getElementById('views').innerText = '👁️ بازدیدها: ' + j.value;
+            } else {
+              throw new Error('پاسخ نامعتبر از fallback');
+            }
+          })
+          .catch(ferr => {
+            showError('خطا در دریافت شمارنده — لطفاً کنسول مرورگر را بررسی کن.');
+            console.error('[ViewCounter] fallback error:', ferr);
+          });
+      });
+  </script>
 </body>
 </html>
