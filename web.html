@@ -95,17 +95,60 @@
             z-index: 10;
         }
 
-        /* هدر مدرن با افکت شیشه‌ای */
+        /* هدر مدرن با افکت شیشه‌ای و عکس منظره */
         .modern-header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
+            position: relative;
             border-radius: 40px;
             padding: 30px;
             margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             text-align: center;
             animation: slideDown 0.8s ease;
+            overflow: hidden;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* عکس پس‌زمینه منظره */
+        .modern-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7) blur(2px);
+            transition: transform 0.5s ease, filter 0.5s ease;
+            z-index: 0;
+        }
+
+        .modern-header:hover::before {
+            transform: scale(1.05);
+            filter: brightness(0.8) blur(1px);
+        }
+
+        /* لایه رنگی روی عکس */
+        .modern-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(245, 158, 11, 0.3));
+            z-index: 1;
+        }
+
+        .modern-header > * {
+            position: relative;
+            z-index: 2;
         }
 
         @keyframes slideDown {
@@ -153,7 +196,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 20px 0 10px;
-            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            text-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
         .badge-modern {
@@ -167,6 +210,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             font-size: 1.1rem;
             color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         /* گرید لینک‌ها با کارت‌های سه‌بعدی و تصاویر پس‌زمینه */
@@ -202,7 +246,7 @@
             background-size: cover;
             background-position: center;
             opacity: 0.25;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
             z-index: 0;
         }
 
@@ -294,7 +338,7 @@
             font-weight: 500;
         }
 
-        /* بخش اطلاعات تماس پیشرفته */
+        /* بخش اطلاعات تماس - سه کارت جدا */
         .contact-showcase {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -302,21 +346,74 @@
             margin: 40px 0;
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+        /* کارت‌های جداگانه با بک‌گراند */
+        .contact-card {
+            position: relative;
             border-radius: 40px;
             padding: 30px;
+            overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .glass-panel:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.02);
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 0;
         }
 
-        .panel-title {
+        .contact-card:hover::before {
+            opacity: 0.3;
+            transform: scale(1.05);
+        }
+
+        .contact-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(3px);
+            z-index: 1;
+        }
+
+        .contact-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* بک‌گراندهای اختصاصی */
+        .card-pik::before {
+            background-image: url('https://images.unsplash.com/photo-1578262825743-a4e402caab76?w=600'); /* موتور پیک */
+        }
+
+        .card-bazargani::before {
+            background-image: url('https://images.unsplash.com/photo-1556742031-c6961e8560b0?w=600'); /* بازرگانی و تجارت */
+        }
+
+        .card-address::before {
+            background-image: url('https://images.unsplash.com/photo-1577086664693-894d8405334a?w=600'); /* آدرس و نقشه */
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -324,6 +421,7 @@
             color: white;
             font-size: 1.8rem;
             font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .phone-list-modern {
@@ -336,15 +434,16 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
             padding: 15px 20px;
             border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s;
         }
 
         .phone-item-modern:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.25);
             border-color: var(--secondary);
             transform: translateX(-5px);
         }
@@ -364,17 +463,20 @@
             display: inline-block;
             text-align: left;
             width: 100%;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
         }
 
         .address-modern {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
             border-radius: 30px;
             padding: 20px;
             margin: 20px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             font-size: 1.2rem;
             line-height: 1.8;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
         }
 
         /* نقشه پیشرفته */
@@ -498,13 +600,13 @@
     </div>
 
     <div class="container">
-        <!-- هدر فوق‌العاده -->
+        <!-- هدر فوق‌العاده با عکس منظره -->
         <div class="modern-header">
             <div class="profile-glow">
                 <img src="https://khaneehsan.github.io/social-platform/logo.png" alt="خانه احسان">
             </div>
             <h1 class="glow-text">خانه احسان</h1>
-            <h2 style="color: white; font-size: 2rem; margin-bottom: 20px;">دریچه‌ای به زندگی پاک</h2>
+            <h2 style="color: white; font-size: 2rem; margin-bottom: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">دریچه‌ای به زندگی پاک</h2>
             <div class="badge-modern">
                 <i class="fas fa-shield-alt"></i>
                 <span>تایید شده</span>
@@ -560,11 +662,11 @@
             </p>
         </div>
 
-        <!-- بخش تماس پیشرفته دو ستونه -->
+        <!-- سه کارت جداگانه: پیک، بازرگانی، آدرس -->
         <div class="contact-showcase">
-            <!-- پنل پیک و بازرگانی -->
-            <div class="glass-panel">
-                <div class="panel-title">
+            <!-- کارت پیک -->
+            <div class="contact-card card-pik">
+                <div class="card-title">
                     <i class="fas fa-motorcycle" style="color: var(--secondary);"></i>
                     <span>ارتباط با پیک</span>
                 </div>
@@ -582,8 +684,11 @@
                         <a href="tel:05131903" style="text-align: left;">05131903</a>
                     </div>
                 </div>
+            </div>
 
-                <div class="panel-title" style="margin-top: 40px;">
+            <!-- کارت بازرگانی -->
+            <div class="contact-card card-bazargani">
+                <div class="card-title">
                     <i class="fas fa-building" style="color: var(--secondary);"></i>
                     <span>بازرگانی</span>
                 </div>
@@ -599,9 +704,9 @@
                 </div>
             </div>
 
-            <!-- پنل آدرس و لوکیشن -->
-            <div class="glass-panel">
-                <div class="panel-title">
+            <!-- کارت آدرس -->
+            <div class="contact-card card-address">
+                <div class="card-title">
                     <i class="fas fa-map-marker-alt" style="color: var(--secondary);"></i>
                     <span>آدرس خانه احسان</span>
                 </div>
@@ -611,15 +716,15 @@
                 </div>
                 
                 <!-- لوکیشن روی نقشه کوچک -->
-                <div style="border-radius: 25px; overflow: hidden; height: 160px; margin: 20px 0; border: 2px solid rgba(255,255,255,0.3);">
+                <div style="border-radius: 25px; overflow: hidden; height: 140px; margin: 15px 0; border: 2px solid rgba(255,255,255,0.3);">
                     <iframe src="https://maps.google.com/maps?q=36.31586640621939,59.46994676427054&hl=fa&z=15&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
 
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <a href="https://nshn.ir/rb1-1sYJ5MET" target="_blank" class="btn-3d btn-secondary">
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 5px;">
+                    <a href="https://nshn.ir/rb1-1sYJ5MET" target="_blank" class="btn-3d btn-secondary" style="padding: 10px 20px; font-size: 1rem;">
                         <i class="fas fa-map-pin"></i> نشان
                     </a>
-                    <a href="https://maps.google.com/?q=36.31586640621939,59.46994676427054" target="_blank" class="btn-3d btn-primary">
+                    <a href="https://maps.google.com/?q=36.31586640621939,59.46994676427054" target="_blank" class="btn-3d btn-primary" style="padding: 10px 20px; font-size: 1rem;">
                         <i class="fas fa-route"></i> مسیریابی
                     </a>
                 </div>
