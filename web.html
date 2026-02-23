@@ -10,6 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* فونت اختصاصی اعرابیک ادوب */
+        @font-face {
+            font-family: 'AdobeArabic';
+            src: url('https://khaneehsan.github.io/social-platform/AdobeArabic-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -31,7 +39,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'AdobeArabic', 'Inter', sans-serif; /* فونت ادوب در اولویت */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
