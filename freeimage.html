@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImageForge 2026 | 8K Ultra</title>
+    <title>ImageForge 2026 | سایت مهناز</title>
     <style>
         * {
             box-sizing: border-box;
@@ -25,6 +25,7 @@
             --accent-gradient: linear-gradient(135deg, #00d4ff, #7c3aed, #06f7a3);
             --radius: 18px;
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --welcome-glow: 0 0 40px rgba(255, 107, 107, 0.3);
         }
 
         [data-theme="light"] {
@@ -35,6 +36,7 @@
             --glass-bg: rgba(255,255,255,0.6);
             --glass-border: rgba(0,0,0,0.08);
             --shadow: rgba(0,0,0,0.08);
+            --welcome-glow: 0 0 40px rgba(255, 107, 107, 0.2);
         }
 
         body {
@@ -46,13 +48,15 @@
             transition: var(--transition);
             background-image: 
                 radial-gradient(ellipse at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+                radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 107, 0.03) 0%, transparent 70%);
         }
 
         [data-theme="light"] body {
             background-image: 
                 radial-gradient(ellipse at 10% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.06) 0%, transparent 50%);
+                radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 107, 0.05) 0%, transparent 70%);
         }
 
         .container {
@@ -92,6 +96,17 @@
             margin-bottom: 4px;
             letter-spacing: 1px;
             font-size: 0.8rem;
+        }
+
+        .header .subtitle .heart {
+            color: #ff6b6b;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
         }
 
         .header .year-badge {
@@ -203,7 +218,8 @@
 
         .badge.green { border-color: var(--accent-3); color: var(--accent-3); }
         .badge.upscale { border-color: var(--accent-1); color: var(--accent-1); }
-        .badge['8k'] { border-color: #ff6b6b; color: #ff6b6b; }
+        .badge.pink { border-color: #ff6b6b; color: #ff6b6b; }
+        .badge.original { border-color: #fbbf24; color: #fbbf24; }
 
         .upload-section {
             background: var(--glass-bg);
@@ -443,18 +459,39 @@
         .status-msg {
             text-align: center;
             font-weight: 500;
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: var(--glass-bg);
             border-radius: 60px;
             border: 1px solid var(--glass-border);
             color: var(--text-secondary);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             transition: var(--transition);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.8;
         }
 
-        .status-msg.success { border-color: var(--accent-3); color: var(--accent-3); }
-        .status-msg.warning { border-color: #f59e0b; color: #f59e0b; }
-        .status-msg.error { border-color: #ef4444; color: #ef4444; }
+        .status-msg.success { 
+            border-color: var(--accent-3); 
+            color: var(--accent-3); 
+        }
+        .status-msg.warning { 
+            border-color: #f59e0b; 
+            color: #f59e0b; 
+        }
+        .status-msg.error { 
+            border-color: #ef4444; 
+            color: #ef4444; 
+        }
+        .status-msg.welcome { 
+            border-color: #ff6b6b; 
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.05);
+            box-shadow: var(--welcome-glow);
+            font-size: 0.85rem;
+        }
 
         .gallery-grid {
             display: grid;
@@ -601,7 +638,7 @@
         }
 
         .seo-footer .heart {
-            color: #ef4444;
+            color: #ff6b6b;
         }
 
         @media (max-width: 900px) {
@@ -637,8 +674,8 @@
 <div class="container">
     <div class="header">
         <div class="logo">ImageForge <span>2026</span></div>
-        <div class="subtitle">✨ ارتقا کیفیت تا 8K · دانلود مستقیم</div>
-        <div class="year-badge">⚡ نسخه نهایی</div>
+        <div class="subtitle">✨ به سایت اختصاصی <span class="heart">❤️</span> مهناز جون خوش اومدی!</div>
+        <div class="year-badge">⚡ ویژه بهترین مهندس دنیا</div>
 
         <div class="theme-toggle-wrapper">
             <div class="theme-toggle" id="themeToggle" role="button" tabindex="0">
@@ -651,9 +688,10 @@
         </div>
 
         <div class="badge-group">
-            <span class="badge green">🟢 کاهش حجم</span>
+            <span class="badge pink">💖 مهناز جون</span>
+            <span class="badge green">🟢 کاهش حجم تا 70KB</span>
             <span class="badge upscale">🔍 8K Ultra</span>
-            <span class="badge" style="border-color:#ff6b6b;color:#ff6b6b;">⬇️ دانلود مستقیم</span>
+            <span class="badge original">📐 1:1 مربع</span>
             <span class="badge">📁 هر تعداد</span>
             <span class="badge">🎨 فیلترها</span>
             <span class="badge">🌓 روز/شب</span>
@@ -672,20 +710,31 @@
             <div class="settings-panel">
                 <div class="setting-item">
                     <label>🎯 حجم هدف (KB)</label>
-                    <input type="number" id="targetSizeKB" value="150" min="10" max="5000">
+                    <input type="number" id="targetSizeKB" value="70" min="10" max="5000">
                 </div>
                 <div class="setting-item">
-                    <label>📐 سایز خروجی (px)</label>
-                    <input type="number" id="targetDimension" value="800" min="100" max="8000">
+                    <label>📐 سایز خروجی</label>
+                    <select id="targetDimension">
+                        <option value="original">🔄 اصلی (همان سایز)</option>
+                        <option value="100">۱۰۰px</option>
+                        <option value="200">۲۰۰px</option>
+                        <option value="400">۴۰۰px</option>
+                        <option value="600">۶۰۰px</option>
+                        <option value="800" selected>۸۰۰px</option>
+                        <option value="1024">۱۰۲۴px</option>
+                        <option value="2048">۲۰۴۸px</option>
+                        <option value="4096">۴۰۹۶px (4K)</option>
+                        <option value="7680">۷۶۸۰px (8K)</option>
+                    </select>
                 </div>
                 <div class="setting-item">
                     <label>📐 نسبت برش</label>
                     <select id="cropMode">
-                        <option value="1:1">۱:۱ (مربع)</option>
+                        <option value="1:1">⬜ ۱:۱ (مربع)</option>
                         <option value="4:3">۴:۳</option>
                         <option value="16:9">۱۶:۹</option>
                         <option value="3:2">۳:۲</option>
-                        <option value="original" selected>اصلی</option>
+                        <option value="original">اصلی (بدون برش)</option>
                     </select>
                 </div>
                 <div class="setting-item">
@@ -708,18 +757,18 @@
                     </select>
                 </div>
                 <div class="setting-item">
-                    <label>🔍 افزایش کیفیت (Upscale)</label>
+                    <label>🔍 افزایش کیفیت</label>
                     <select id="upscaleMode">
                         <option value="none">بدون افزایش</option>
                         <option value="2x">⬆️ ۲x</option>
                         <option value="4x">⬆️ ۴x</option>
                         <option value="8x">⬆️ ۸x (8K)</option>
-                        <option value="enhanced">🌟 پیشرفته (AI-like)</option>
+                        <option value="enhanced">🌟 پیشرفته</option>
                     </select>
                 </div>
                 <div class="setting-item">
                     <label>📛 الگوی نام</label>
-                    <input type="text" id="namePattern" value="image_{index}" placeholder="image_{index}">
+                    <input type="text" id="namePattern" value="mahnaz_{index}" placeholder="mahnaz_{index}">
                 </div>
             </div>
 
@@ -742,19 +791,51 @@
                 <button class="btn btn-outline" onclick="loadSettings()">📂 بارگذاری</button>
             </div>
 
-            <div class="status-msg" id="statusMessage">🚀 آماده است! (دانلود مستقیم بدون نیاز به دسترسی)</div>
+            <div class="status-msg" id="statusMessage">🌸 در حال بارگذاری...</div>
         </div>
     </div>
 
     <div class="gallery-grid" id="galleryGrid"></div>
 
     <div class="seo-footer">
-        <p><strong>ImageForge 2026</strong> — ارتقا کیفیت تا 8K · دانلود مستقیم <span class="heart">❤️</span></p>
+        <p><strong>ImageForge 2026</strong> — ویژه <span class="heart">❤️</span> مهناز جون · بهترین مهندس دنیا</p>
+        <p style="margin-top:4px; opacity:0.5; font-size:0.65rem;">📐 کاهش حجم تا 70KB · برش 1:1 مربع بدون کشیدگی</p>
     </div>
 </div>
 
 <script>
     (function() {
+        // ===== پیغام خوش‌آمد =====
+        function showWelcomeMessage() {
+            const now = new Date();
+            const hour = now.getHours();
+            let timeGreeting = '';
+            
+            if (hour >= 5 && hour < 12) timeGreeting = '🌅 صبح بخیر';
+            else if (hour >= 12 && hour < 17) timeGreeting = '🌤️ ظهر بخیر';
+            else if (hour >= 17 && hour < 21) timeGreeting = '🌇 عصر بخیر';
+            else timeGreeting = '🌙 شب بخیر';
+            
+            const msg = document.getElementById('statusMessage');
+            msg.className = 'status-msg welcome';
+            msg.textContent = '';
+            
+            const text = `${timeGreeting} مهناز جون! 🌸 ✨ به بهترین مهندس دنیا خوش اومدی! 🚀 سایت خودت آماده‌ست تا هر کاری که دوست داری با عکس‌هات انجام بدی. 💎 یادت باشه: تو بهترینی! ❤️`;
+            
+            let i = 0;
+            const speed = 35;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    msg.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+            
+            setTimeout(typeWriter, 400);
+        }
+
         // ===== Theme =====
         const themeToggle = document.getElementById('themeToggle');
         const toggleThumb = document.getElementById('toggleThumb');
@@ -799,6 +880,14 @@
         let filesList = [];
         let idCounter = 0;
         let isProcessing = false;
+        let welcomeShown = false;
+
+        window.addEventListener('load', function() {
+            if (!welcomeShown) {
+                setTimeout(showWelcomeMessage, 300);
+                welcomeShown = true;
+            }
+        });
 
         // ===== Helpers =====
         function formatBytes(bytes) {
@@ -872,7 +961,6 @@
             ctx.putImageData(imageData, 0, 0);
         }
 
-        // ===== دانلود مستقیم (بدون نیاز به دسترسی) =====
         function downloadDirect(blob, filename) {
             const link = document.createElement('a');
             link.download = filename;
@@ -884,7 +972,7 @@
             updateStatusMessage(`⬇️ دانلود ${filename} شروع شد.`, 'success');
         }
 
-        // ===== پردازش با کیفیت بالا (8K) =====
+        // ===== پردازش با رفع کشیدگی =====
         function processSingleItem(item) {
             return new Promise((resolve) => {
                 if (!item.originalData) {
@@ -897,38 +985,52 @@
                 renderGallery();
 
                 const img = item.originalData.img;
-                const targetDim = parseInt(targetDimension.value) || 800;
-                const targetSize = parseInt(targetSizeKB.value) * 1024 || 150 * 1024;
+                const targetSize = parseInt(targetSizeKB.value) * 1024 || 70 * 1024;
                 const crop = cropMode.value;
                 const format = outputFormat.value;
                 const filter = filterMode.value;
                 const upscale = upscaleMode.value;
 
-                // محاسبه سایز نهایی بر اساس حالت آپسکیل
-                let finalDim = targetDim;
-                if (upscale === '2x') finalDim = targetDim * 2;
-                else if (upscale === '4x') finalDim = targetDim * 4;
-                else if (upscale === '8x') finalDim = targetDim * 8;
-                else if (upscale === 'enhanced') finalDim = targetDim * 4; // پیشرفته
+                // ===== تعیین سایز نهایی =====
+                let targetDim = parseInt(targetDimension.value);
+                let finalDim;
+                
+                if (targetDimension.value === 'original') {
+                    finalDim = Math.min(img.width, img.height);
+                } else {
+                    finalDim = targetDim || 800;
+                }
 
-                // محدودیت 8K (7680px)
+                if (upscale === '2x') finalDim = finalDim * 2;
+                else if (upscale === '4x') finalDim = finalDim * 4;
+                else if (upscale === '8x') finalDim = finalDim * 8;
+                else if (upscale === 'enhanced') finalDim = finalDim * 4;
+
                 const MAX_DIM = 7680;
                 if (finalDim > MAX_DIM) finalDim = MAX_DIM;
 
-                // برش به نسبت
-                let cropW = img.width, cropH = img.height;
+                // ===== برش با حفظ نسبت =====
+                let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
                 const ratio = getAspectRatio(crop);
+                
                 if (ratio !== null) {
+                    // محاسبه برش از مرکز با حفظ نسبت
                     if (img.width / img.height > ratio) {
+                        // عکس پهن‌تر است → از پهلو برش می‌زنیم
                         cropW = img.height * ratio;
+                        cropX = (img.width - cropW) / 2;
+                        cropY = 0;
+                        cropH = img.height;
                     } else {
+                        // عکس بلندتر است → از بالا/پایین برش می‌زنیم
                         cropH = img.width / ratio;
+                        cropX = 0;
+                        cropY = (img.height - cropH) / 2;
+                        cropW = img.width;
                     }
                 }
-                const offsetX = (img.width - cropW) / 2;
-                const offsetY = (img.height - cropH) / 2;
 
-                // ==== الگوریتم پیشرفته افزایش کیفیت ====
+                // ===== افزایش کیفیت پیشرفته =====
                 function upscaleImage(source, targetW, targetH, method) {
                     const canvas = document.createElement('canvas');
                     canvas.width = targetW;
@@ -938,7 +1040,6 @@
                     ctx.imageSmoothingQuality = 'high';
 
                     if (method === 'enhanced') {
-                        // روش پیشرفته: چند مرحله‌ای
                         const steps = 4;
                         let tempW = source.width;
                         let tempH = source.height;
@@ -959,7 +1060,6 @@
                             stepCtx.imageSmoothingQuality = 'high';
                             stepCtx.drawImage(tempCanvas, 0, 0, tempW, tempH, 0, 0, nextW, nextH);
                             
-                            // اعمال شارپنس در هر مرحله
                             if (i < steps - 1) {
                                 applySharpen(stepCtx, nextW, nextH);
                             }
@@ -971,17 +1071,14 @@
                             if (tempW >= targetW && tempH >= targetH) break;
                         }
                         
-                        // رسم نهایی روی canvas اصلی
                         ctx.drawImage(tempCanvas, 0, 0, tempW, tempH, 0, 0, targetW, targetH);
                     } else {
-                        // روش ساده (2x, 4x, 8x)
                         ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, targetW, targetH);
                     }
 
                     return canvas;
                 }
 
-                // مرحله ۱: برش و رزایز اولیه
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = finalDim;
                 tempCanvas.height = finalDim;
@@ -989,10 +1086,8 @@
                 tempCtx.imageSmoothingEnabled = true;
                 tempCtx.imageSmoothingQuality = 'high';
                 
-                // اگر upscale پیشرفته است، از روش چندمرحله‌ای استفاده کن
                 let finalCanvas;
                 if (upscale === 'enhanced') {
-                    // ابتدا یک رزایز اولیه به سایز میانی
                     const midDim = Math.min(finalDim, 2048);
                     const midCanvas = document.createElement('canvas');
                     midCanvas.width = midDim;
@@ -1000,23 +1095,18 @@
                     const midCtx = midCanvas.getContext('2d');
                     midCtx.imageSmoothingEnabled = true;
                     midCtx.imageSmoothingQuality = 'high';
-                    midCtx.drawImage(img, offsetX, offsetY, cropW, cropH, 0, 0, midDim, midDim);
-                    
-                    // سپس آپسکیل پیشرفته
+                    midCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, midDim, midDim);
                     finalCanvas = upscaleImage(midCanvas, finalDim, finalDim, 'enhanced');
                 } else {
-                    // روش معمولی
-                    tempCtx.drawImage(img, offsetX, offsetY, cropW, cropH, 0, 0, finalDim, finalDim);
+                    tempCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, finalDim, finalDim);
                     finalCanvas = tempCanvas;
                     
-                    // اگر آپسکیل 4x یا 8x است، کیفیت رو بهتر کن
                     if (upscale === '4x' || upscale === '8x') {
                         const enhancedCanvas = upscaleImage(finalCanvas, finalDim, finalDim, 'enhanced');
                         finalCanvas = enhancedCanvas;
                     }
                 }
 
-                // اعمال فیلترها
                 const ctx = finalCanvas.getContext('2d');
                 if (filter === 'sharpen') {
                     applySharpen(ctx, finalDim, finalDim);
@@ -1025,7 +1115,6 @@
                     applyFilter(ctx, finalDim, finalDim, filter, imageData);
                 }
 
-                // بهینه‌سازی حجم
                 let quality = 0.92;
                 let bestBlob = null;
 
@@ -1043,7 +1132,7 @@
 
                 (async function adjust() {
                     let currentQ = quality;
-                    const maxAttempts = 20;
+                    const maxAttempts = 25;
                     for (let i = 0; i < maxAttempts; i++) {
                         const blob = await tryExport(currentQ);
                         if (!blob) continue;
@@ -1051,12 +1140,12 @@
                             bestBlob = blob;
                             break;
                         } else {
-                            currentQ = Math.max(0.55, currentQ - 0.015);
-                            if (currentQ < 0.55) break;
+                            currentQ = Math.max(0.50, currentQ - 0.015);
+                            if (currentQ < 0.50) break;
                         }
                     }
-                    if (!bestBlob) bestBlob = await tryExport(0.70);
-                    if (!bestBlob) bestBlob = await tryExport(0.80);
+                    if (!bestBlob) bestBlob = await tryExport(0.65);
+                    if (!bestBlob) bestBlob = await tryExport(0.75);
 
                     if (bestBlob) {
                         item.processedBlob = bestBlob;
@@ -1066,7 +1155,9 @@
                         
                         const reduction = ((item.file.size - bestBlob.size) / item.file.size * 100).toFixed(1);
                         const dimText = finalDim >= 7680 ? '8K' : finalDim >= 3840 ? '4K' : `${finalDim}px`;
-                        updateStatusMessage(`✅ ${item.file.name} → ${formatBytes(bestBlob.size)} (${dimText} | کاهش ${reduction}%)`, 'success');
+                        const sizeInfo = targetDimension.value === 'original' ? ' (سایز اصلی)' : '';
+                        const cropInfo = crop === '1:1' ? ' 📐 مربع' : '';
+                        updateStatusMessage(`✅ ${item.file.name} → ${formatBytes(bestBlob.size)} (${dimText}${sizeInfo}${cropInfo} | کاهش ${reduction}%)`, 'success');
                     } else {
                         item.status = 'error';
                         updateStatusMessage(`❌ پردازش ${item.file.name} ناموفق بود`, 'error');
@@ -1094,7 +1185,7 @@
             const pendingItems = filesList.filter(f => f.status !== 'done' && f.status !== 'upscaled');
             updateStatusMessage(`⏳ در حال پردازش ${pendingItems.length} عکس...`);
 
-            const batchSize = 2; // برای کیفیت بالا، تعداد کمتر
+            const batchSize = 2;
             for (let i = 0; i < pendingItems.length; i += batchSize) {
                 const batch = pendingItems.slice(i, i + batchSize);
                 await Promise.all(batch.map(item => processSingleItem(item)));
@@ -1221,8 +1312,8 @@
             const item = filesList.find(f => f.id === id);
             if (!item || !item.processedBlob) return;
 
-            let pattern = namePattern.value || 'image_{index}';
-            const baseName = item.file.name.replace(/\.[^.]+$/, '') || 'image';
+            let pattern = namePattern.value || 'mahnaz_{index}';
+            const baseName = item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
             const idx = filesList.indexOf(item) + 1;
             let finalName = pattern.replace(/{index}/g, idx).replace(/{name}/g, baseName);
             const ext = outputFormat.value.split('/')[1] || 'jpg';
@@ -1281,7 +1372,6 @@
             }
         }
 
-        // ===== دانلود همه (به صورت تکی، نه ZIP) =====
         function downloadAll() {
             const doneItems = filesList.filter(f => (f.status === 'done' || f.status === 'upscaled') && f.processedBlob);
             if (doneItems.length === 0) {
@@ -1291,8 +1381,8 @@
 
             doneItems.forEach((item, idx) => {
                 setTimeout(() => {
-                    let pattern = namePattern.value || 'image_{index}';
-                    const baseName = item.file.name.replace(/\.[^.]+$/, '') || 'image';
+                    let pattern = namePattern.value || 'mahnaz_{index}';
+                    const baseName = item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
                     const finalName = pattern.replace(/{index}/g, idx+1).replace(/{name}/g, baseName);
                     const ext = outputFormat.value.split('/')[1] || 'jpg';
                     downloadDirect(item.processedBlob, `${finalName}.${ext}`);
@@ -1302,7 +1392,6 @@
             updateStatusMessage(`⬇️ دانلود ${doneItems.length} عکس شروع شد.`, 'success');
         }
 
-        // ===== Save/Load Settings =====
         window.saveSettings = function() {
             const settings = {
                 targetSize: targetSizeKB.value,
@@ -1325,13 +1414,13 @@
             }
             try {
                 const s = JSON.parse(data);
-                targetSizeKB.value = s.targetSize || 150;
-                targetDimension.value = s.targetDim || 800;
+                targetSizeKB.value = s.targetSize || 70;
+                targetDimension.value = s.targetDim || '800';
                 cropMode.value = s.crop || 'original';
                 outputFormat.value = s.format || 'image/jpeg';
                 filterMode.value = s.filter || 'none';
                 upscaleMode.value = s.upscale || 'none';
-                namePattern.value = s.namePattern || 'image_{index}';
+                namePattern.value = s.namePattern || 'mahnaz_{index}';
                 updateStatusMessage('📂 تنظیمات بارگذاری شد.', 'success');
             } catch(e) {
                 updateStatusMessage('❌ خطا در بارگذاری تنظیمات.', 'error');
@@ -1382,7 +1471,11 @@
         // ===== Init =====
         loadSettings();
         renderGallery();
-        updateStatusMessage('🚀 ImageForge 2026 آماده است! دانلود مستقیم بدون نیاز به دسترسی');
+        
+        if (!welcomeShown) {
+            setTimeout(showWelcomeMessage, 300);
+            welcomeShown = true;
+        }
     })();
 </script>
 
