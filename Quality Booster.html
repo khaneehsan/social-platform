@@ -29,6 +29,8 @@
             --toast-bg: #1a1f2b;
             --input-bg: #1a1f2b;
             --stat-bg: rgba(255, 255, 255, 0.03);
+            --welcome-bg: rgba(240, 179, 75, 0.05);
+            --welcome-border: rgba(240, 179, 75, 0.15);
         }
 
         body.light-mode {
@@ -45,6 +47,8 @@
             --toast-bg: #ffffff;
             --input-bg: #f0f2f6;
             --stat-bg: rgba(0, 0, 0, 0.03);
+            --welcome-bg: rgba(240, 179, 75, 0.08);
+            --welcome-border: rgba(240, 179, 75, 0.2);
         }
 
         body {
@@ -67,6 +71,227 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 40px 80px var(--shadow-color);
             transition: all 0.5s ease;
+            position: relative;
+        }
+
+        /* ===== WELCOME OVERLAY ===== */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.8s ease;
+            transition: all 0.5s ease;
+        }
+
+        body.light-mode .welcome-overlay {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+        }
+
+        .welcome-box {
+            background: var(--bg-secondary);
+            border-radius: 40px;
+            padding: 50px 60px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid var(--welcome-border);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(240, 179, 75, 0.05), transparent 70%);
+            animation: rotateBg 20s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .welcome-box .emoji {
+            font-size: 70px;
+            display: block;
+            margin-bottom: 15px;
+            animation: bounce 2s ease infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .welcome-box .greeting {
+            font-size: 14px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-box .name {
+            font-size: 38px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f0b34b, #ff7e5f, #f0b34b);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 3s ease infinite;
+            margin: 5px 0 10px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes gradientMove {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .welcome-box .title {
+            font-size: 20px;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-box .subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-box .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #f0b34b, #ff7e5f);
+            margin: 15px auto;
+            border-radius: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-welcome {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #f0b34b, #e07c2e);
+            border: none;
+            border-radius: 60px;
+            color: #080b12;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-welcome:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(240, 179, 75, 0.3);
+        }
+
+        .welcome-box .sparkle {
+            position: absolute;
+            font-size: 20px;
+            animation: sparkle 3s ease infinite;
+            z-index: 0;
+        }
+
+        .welcome-box .sparkle:nth-child(1) {
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+        .welcome-box .sparkle:nth-child(2) {
+            bottom: 15%;
+            left: 10%;
+            animation-delay: 1s;
+        }
+        .welcome-box .sparkle:nth-child(3) {
+            top: 20%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+        .welcome-box .sparkle:nth-child(4) {
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes sparkle {
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.8) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(20deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .welcome-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
         }
 
         /* ===== HEADER ===== */
@@ -132,6 +357,12 @@
         @media (max-width: 900px) {
             .main-grid {
                 grid-template-columns: 1fr;
+            }
+            .welcome-box {
+                padding: 35px 25px;
+            }
+            .welcome-box .name {
+                font-size: 28px;
             }
         }
 
@@ -434,24 +665,7 @@
             color: #f0b34b;
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .container {
-                padding: 16px;
-                border-radius: 24px;
-            }
-            .logo h1 {
-                font-size: 20px;
-            }
-            .btn-group {
-                grid-template-columns: 1fr;
-            }
-            .quality-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== PROGRESS BAR ===== */
+        /* ===== PROGRESS ===== */
         .progress-container {
             width: 100%;
             height: 4px;
@@ -473,10 +687,70 @@
         .progress-container.active {
             display: block;
         }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+                border-radius: 24px;
+            }
+            .logo h1 {
+                font-size: 20px;
+            }
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+            .quality-stats {
+                grid-template-columns: 1fr;
+            }
+            .welcome-box {
+                padding: 30px 20px;
+            }
+            .welcome-box .name {
+                font-size: 24px;
+            }
+            .welcome-box .emoji {
+                font-size: 50px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- ===== WELCOME OVERLAY ===== -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-box">
+            <span class="sparkle">✨</span>
+            <span class="sparkle">🌟</span>
+            <span class="sparkle">💫</span>
+            <span class="sparkle">⭐</span>
+
+            <span class="emoji">🌹</span>
+
+            <div class="greeting">✨ خوش آمدید ✨</div>
+
+            <div class="name">مهناز جان ❤️</div>
+
+            <div class="title">بهترین مهندس دنیا</div>
+
+            <div class="divider"></div>
+
+            <div class="subtitle">
+                به سایت خودت خوش اومدی 🎉<br>
+                <span style="font-size:13px; color:var(--text-muted);">
+                    <i class="fas fa-robot" style="color:#f0b34b;"></i>
+                    با هوش مصنوعی کیفیت عکس‌هات رو به بالاترین سطح برسون
+                </span>
+            </div>
+
+            <button class="btn-welcome" id="welcomeBtn">
+                <i class="fas fa-rocket"></i>
+                شروع کن 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toastMessage">عملیات با موفقیت انجام شد</span>
@@ -492,6 +766,9 @@
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" title="تغییر تم">
                     <i class="fas fa-moon"></i>
+                </button>
+                <button class="theme-toggle" id="welcomeBtnHeader" title="پیغام خوش‌آمد" style="font-size:16px;">
+                    <i class="fas fa-heart" style="color:#f0b34b;"></i>
                 </button>
                 <span style="color:var(--text-muted); font-size:13px;">
                     <i class="fas fa-arrows-alt-h"></i> سایز ثابت
@@ -589,6 +866,7 @@
     <script>
         // ============================================================
         //  🧠 افزایش کیفیت واقعی با هوش مصنوعی (با شبیه‌سازی پیشرفته)
+        //  🌹 نسخه اختصاصی مهناز - بهترین مهندس دنیا
         // ============================================================
 
         // ---------- DOM ----------
@@ -623,16 +901,42 @@
         const toastMessage = document.getElementById('toastMessage');
 
         const themeToggle = document.getElementById('themeToggle');
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const welcomeBtn = document.getElementById('welcomeBtn');
+        const welcomeBtnHeader = document.getElementById('welcomeBtnHeader');
 
         let currentFile = null;
         let originalImageData = null;
         let processedImageData = null;
         let originalWidth = 0;
         let originalHeight = 0;
-
-        // ---------- Theme Toggle ----------
         let isDark = true;
 
+        // ---------- Welcome ----------
+        // نمایش خودکار پیغام خوش‌آمد
+        setTimeout(() => {
+            welcomeOverlay.classList.remove('hidden');
+        }, 300);
+
+        // دکمه شروع در باکس خوش‌آمد
+        welcomeBtn.addEventListener('click', () => {
+            welcomeOverlay.classList.add('hidden');
+            showToast('🌹 مهناز جان به سایت خودت خوش اومدی! ❤️');
+        });
+
+        // دکمه هدر برای نمایش مجدد
+        welcomeBtnHeader.addEventListener('click', () => {
+            welcomeOverlay.classList.remove('hidden');
+        });
+
+        // کلیک روی پس‌زمینه برای بستن
+        welcomeOverlay.addEventListener('click', (e) => {
+            if (e.target === welcomeOverlay) {
+                welcomeOverlay.classList.add('hidden');
+            }
+        });
+
+        // ---------- Theme Toggle ----------
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
             isDark = !isDark;
@@ -649,7 +953,7 @@
             toastMessage.textContent = msg;
             toast.classList.add('show');
             clearTimeout(toast._timeout);
-            toast._timeout = setTimeout(() => toast.classList.remove('show'), 4000);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 5000);
             toast.style.borderRightColor = isError ? '#ff4757' : '#f0b34b';
         }
 
@@ -661,7 +965,7 @@
                 setTimeout(() => {
                     progressContainer.classList.remove('active');
                     progressBar.style.width = '0%';
-                }, 500);
+                }, 600);
             }
         }
 
@@ -726,7 +1030,7 @@
             zoomImg.style.transformOrigin = 'center center';
         });
 
-        // ---------- 🔥 افزایش کیفیت واقعی با AI ----------
+        // ---------- 🔥 افزایش کیفیت واقعی ----------
         processBtn.addEventListener('click', () => {
             if (!currentFile || !originalImageData) {
                 alert('لطفاً ابتدا یک عکس انتخاب کنید.');
@@ -746,7 +1050,6 @@
                 const width = img.width;
                 const height = img.height;
 
-                // شبیه‌سازی پردازش AI با مراحل
                 let progress = 0;
                 const interval = setInterval(() => {
                     progress += Math.random() * 15 + 5;
@@ -762,7 +1065,7 @@
             img.src = originalImageData;
         });
 
-        // ---------- تابع افزایش کیفیت با تکنیک‌های پیشرفته ----------
+        // ---------- تابع افزایش کیفیت ----------
         function enhanceWithAI(sourceImg, width, height, intensity) {
             try {
                 const canvas = document.createElement('canvas');
@@ -773,27 +1076,23 @@
                     willReadFrequently: true
                 });
 
-                // مرحله 1: رندر با کیفیت بالا
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = 'high';
                 ctx.drawImage(sourceImg, 0, 0, width, height);
 
-                // مرحله 2: پردازش پیشرفته (شبیه‌سازی AI)
                 const imageData = ctx.getImageData(0, 0, width, height);
                 const data = imageData.data;
                 const original = new Uint8ClampedArray(data);
 
-                // پارامترهای هوشمند بر اساس شدت
                 const sharpness = 0.15 + (intensity * 0.4);
                 const contrast = 1 + (intensity * 0.12);
                 const denoise = 0.03 + (intensity * 0.04);
 
-                // پردازش پیکسل‌ها با الگوریتم پیشرفته
+                // شارپ‌نس
                 for (let y = 1; y < height - 1; y++) {
                     for (let x = 1; x < width - 1; x++) {
                         const idx = (y * width + x) * 4;
 
-                        // میانگین وزنی ۳x۳
                         let avgR = 0,
                             avgG = 0,
                             avgB = 0;
@@ -814,12 +1113,10 @@
                         avgG /= totalWeight;
                         avgB /= totalWeight;
 
-                        // اعمال شارپ‌نس هوشمند
                         let r = original[idx] + sharpness * (original[idx] - avgR);
                         let g = original[idx + 1] + sharpness * (original[idx + 1] - avgG);
                         let b = original[idx + 2] + sharpness * (original[idx + 2] - avgB);
 
-                        // اعمال کنتراست
                         r = ((r / 255 - 0.5) * contrast + 0.5) * 255;
                         g = ((g / 255 - 0.5) * contrast + 0.5) * 255;
                         b = ((b / 255 - 0.5) * contrast + 0.5) * 255;
@@ -832,7 +1129,7 @@
 
                 ctx.putImageData(imageData, 0, 0);
 
-                // مرحله 3: کاهش نویز
+                // کاهش نویز
                 const imageData2 = ctx.getImageData(0, 0, width, height);
                 const data2 = imageData2.data;
                 const original2 = new Uint8ClampedArray(data2);
@@ -864,13 +1161,12 @@
                 }
                 ctx.putImageData(imageData2, 0, 0);
 
-                // مرحله 4: افزایش کیفیت رنگ‌ها
+                // افزایش اشباع رنگ
                 const imageData3 = ctx.getImageData(0, 0, width, height);
                 const data3 = imageData3.data;
                 const saturation = 1 + (intensity * 0.1);
 
                 for (let i = 0; i < data3.length; i += 4) {
-                    // تبدیل به HSV برای افزایش اشباع
                     const r = data3[i] / 255;
                     const g = data3[i + 1] / 255;
                     const b = data3[i + 2] / 255;
@@ -898,7 +1194,6 @@
                         }
                     }
 
-                    // افزایش اشباع
                     s = Math.min(1, s * saturation);
                     const p = v * (1 - s);
                     const q = v * (1 - s * ((h * 6) % 1));
@@ -926,15 +1221,12 @@
                 }
                 ctx.putImageData(imageData3, 0, 0);
 
-                // نهایی
                 processedImageData = canvas.toDataURL('image/png', 1.0);
 
-                // نمایش
                 previewImg.src = processedImageData;
                 previewImg.classList.add('active');
                 zoomImg.src = processedImageData;
 
-                // آمار
                 statWidth.textContent = width;
                 statHeight.textContent = height;
                 const qualityPercent = Math.round(60 + (intensity * 35));
@@ -995,7 +1287,6 @@
         statHeight.textContent = '—';
         statQuality.textContent = '—';
         zoomValue.textContent = '1.0x';
-        showToast('🧠 عکس را آپلود کنید و کیفیت را با AI افزایش دهید');
 
         // ---------- شورتکات ----------
         document.addEventListener('keydown', (e) => {
@@ -1006,6 +1297,10 @@
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                 e.preventDefault();
                 if (!downloadBtn.disabled) downloadBtn.click();
+            }
+            // کلید Escape برای بستن پیغام خوش‌آمد
+            if (e.key === 'Escape') {
+                welcomeOverlay.classList.add('hidden');
             }
         });
     </script>
