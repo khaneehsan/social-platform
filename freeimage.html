@@ -495,8 +495,8 @@
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
             margin: 14px 0 10px;
         }
 
@@ -506,7 +506,7 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius);
-            padding: 8px;
+            padding: 10px;
             transition: var(--transition);
         }
 
@@ -535,28 +535,40 @@
         .image-card .card-footer {
             margin-top: 6px;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 3px;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .image-card .file-name {
+        .image-card .file-name-input {
+            width: 100%;
+            padding: 3px 6px;
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.7rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .image-card .file-name-input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
+        }
+
+        .image-card .file-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 0.6rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
             color: var(--text-secondary);
         }
 
         .image-card .file-size {
-            font-size: 0.55rem;
             background: var(--glass-bg);
             padding: 1px 8px;
             border-radius: 40px;
             border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
         }
 
         .image-card .status-badge {
@@ -574,7 +586,7 @@
 
         .image-card .btn-group {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             margin-top: 4px;
             flex-wrap: wrap;
         }
@@ -767,7 +779,7 @@
                     </select>
                 </div>
                 <div class="setting-item">
-                    <label>📛 الگوی نام</label>
+                    <label>📛 الگوی پیش‌فرض نام</label>
                     <input type="text" id="namePattern" value="mahnaz_{index}" placeholder="mahnaz_{index}">
                 </div>
             </div>
@@ -1014,15 +1026,12 @@
                 const ratio = getAspectRatio(crop);
                 
                 if (ratio !== null) {
-                    // محاسبه برش از مرکز با حفظ نسبت
                     if (img.width / img.height > ratio) {
-                        // عکس پهن‌تر است → از پهلو برش می‌زنیم
                         cropW = img.height * ratio;
                         cropX = (img.width - cropW) / 2;
                         cropY = 0;
                         cropH = img.height;
                     } else {
-                        // عکس بلندتر است → از بالا/پایین برش می‌زنیم
                         cropH = img.width / ratio;
                         cropX = 0;
                         cropY = (img.height - cropH) / 2;
@@ -1220,7 +1229,7 @@
                 else if (item.status === 'error') { statusText = '❌ خطا'; statusClass = 'error'; }
 
                 const src = item.originalData?.src || '';
-                const name = item.file?.name || 'عکس';
+                const name = item.customName || item.file?.name || 'عکس';
                 const size = item.file ? formatBytes(item.file.size) : '—';
                 const outputSize = item.processedBlob ? formatBytes(item.processedBlob.size) : '—';
                 const outputDim = item.processedDim ? `${item.processedDim}×${item.processedDim}` : '—';
@@ -1230,12 +1239,12 @@
                         <img src="${src}" alt="${name}" loading="lazy">
                     </div>
                     <div class="card-footer">
-                        <span class="file-name" title="${name}">${name.length > 12 ? name.slice(0,10)+'…' : name}</span>
-                        <span class="file-size">${size}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-top:4px; align-items:center; flex-wrap:wrap; gap:3px;">
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                        ${item.processedBlob ? `<span style="font-size:0.5rem; opacity:0.6; padding:1px 8px; border-radius:40px; border:1px solid var(--glass-border);">${outputSize} | ${outputDim}</span>` : ''}
+                        <input class="file-name-input" type="text" value="${name}" data-id="${item.id}" placeholder="نام عکس را وارد کنید">
+                        <div class="file-meta">
+                            <span class="file-size">${size}</span>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        ${item.processedBlob ? `<div style="font-size:0.5rem; opacity:0.6; padding:1px 8px; border-radius:40px; border:1px solid var(--glass-border); text-align:center;">${outputSize} | ${outputDim}</div>` : ''}
                     </div>
                     <div class="btn-group">
                         ${item.processedBlob ? `<button class="btn-sm download" data-id="${item.id}">⬇️</button>` : ''}
@@ -1244,6 +1253,16 @@
                     </div>
                 `;
                 galleryGrid.appendChild(card);
+
+                // اسم‌گذاری جداگانه
+                const nameInput = card.querySelector('.file-name-input');
+                nameInput.addEventListener('input', function(e) {
+                    const id = parseInt(this.dataset.id);
+                    const target = filesList.find(f => f.id === id);
+                    if (target) {
+                        target.customName = this.value;
+                    }
+                });
 
                 card.querySelector('.btn-sm.download')?.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -1312,13 +1331,11 @@
             const item = filesList.find(f => f.id === id);
             if (!item || !item.processedBlob) return;
 
-            let pattern = namePattern.value || 'mahnaz_{index}';
-            const baseName = item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
-            const idx = filesList.indexOf(item) + 1;
-            let finalName = pattern.replace(/{index}/g, idx).replace(/{name}/g, baseName);
+            // استفاده از نام شخصی‌سازی شده یا الگوی پیش‌فرض
+            const customName = item.customName?.trim() || item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
             const ext = outputFormat.value.split('/')[1] || 'jpg';
             
-            downloadDirect(item.processedBlob, `${finalName}.${ext}`);
+            downloadDirect(item.processedBlob, `${customName}.${ext}`);
         }
 
         function addFiles(files) {
@@ -1337,9 +1354,11 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
+                        const baseName = f.name.replace(/\.[^.]+$/, '');
                         const item = {
                             id: id,
                             file: f,
+                            customName: baseName, // نام پیش‌فرض از فایل
                             originalData: { 
                                 src: e.target.result, 
                                 img: img, 
@@ -1381,11 +1400,9 @@
 
             doneItems.forEach((item, idx) => {
                 setTimeout(() => {
-                    let pattern = namePattern.value || 'mahnaz_{index}';
-                    const baseName = item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
-                    const finalName = pattern.replace(/{index}/g, idx+1).replace(/{name}/g, baseName);
+                    const customName = item.customName?.trim() || item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
                     const ext = outputFormat.value.split('/')[1] || 'jpg';
-                    downloadDirect(item.processedBlob, `${finalName}.${ext}`);
+                    downloadDirect(item.processedBlob, `${customName}.${ext}`);
                 }, idx * 500);
             });
 
