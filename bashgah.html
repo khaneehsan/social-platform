@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>باشگاه مشتریان سالم زیستان</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+  
+  <style>
+    /* ===== تمام استایل‌های CSS ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background-color: #f9f4eb;
+      color: #2d3e2b;
+      padding: 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+      border-bottom: 2px solid #d9c9b4;
+      margin-bottom: 2rem;
+      background: linear-gradient(to left, #f5ede4, #fffaf3);
+      border-radius: 2rem 2rem 1rem 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #2b5e3b;
+    }
+
+    .header .highlight {
+      color: #7c9b6e;
+      background: #f0f0e0;
+      padding: 0 0.5rem;
+      border-radius: 0.8rem;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: #5e6f4b;
+      margin-top: 0.5rem;
+      font-weight: 300;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 1.8rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+      padding: 1.2rem 1rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fefcf8;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(60, 80, 50, 0.08);
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 1.2rem;
+      background: #e8e2d6;
+      margin-bottom: 0.8rem;
+      transition: transform 0.3s;
+    }
+
+    .card:hover img {
+      transform: scale(1.02);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2d4a2a;
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #6a7a5a;
+      line-height: 1.5;
+      margin-bottom: 0.2rem;
+    }
+
+    .card.selected {
+      border: 2.5px solid #4a7c4f;
+      background: #f5f9ef;
+      box-shadow: 0 0 0 4px rgba(74, 124, 79, 0.12), 0 12px 28px rgba(0, 0, 0, 0.06);
+      transform: scale(1.01);
+    }
+
+    .btn-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 1.5rem 0 2.5rem;
+    }
+
+    .btn-primary {
+      background: #437a4a;
+      color: #fff;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      padding: 0.9rem 4.5rem;
+      border: none;
+      border-radius: 3rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 14px rgba(60, 110, 60, 0.2);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary:hover {
+      background: #316a39;
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px rgba(60, 110, 60, 0.25);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fcf9f2;
+      max-width: 550px;
+      width: 100%;
+      padding: 2.5rem 2rem 2rem;
+      border-radius: 2.5rem;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+      position: relative;
+      animation: modalFade 0.25s ease;
+    }
+
+    @keyframes modalFade {
+      0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.8rem;
+      left: 1.2rem;
+      font-size: 2.2rem;
+      background: none;
+      border: none;
+      color: #7c8a6e;
+      cursor: pointer;
+      transition: 0.2s;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: #2d4a2a;
+      transform: rotate(90deg);
+    }
+
+    .modal-box h2 {
+      font-size: 1.8rem;
+      color: #2d4a2a;
+      margin-bottom: 1.8rem;
+      text-align: center;
+      border-bottom: 2px solid #d9c9b4;
+      padding-bottom: 0.6rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      color: #3a543a;
+      margin-bottom: 0.3rem;
+    }
+
+    .required {
+      color: #b54a4a;
+      margin-right: 0.2rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.95rem;
+      border: 1.5px solid #d6cdbc;
+      border-radius: 1.2rem;
+      background: #fefcf8;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #4a7c4f;
+      box-shadow: 0 0 0 3px rgba(74, 124, 79, 0.15);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .error-msg {
+      font-size: 0.8rem;
+      color: #b54a4a;
+      display: block;
+      margin-top: 0.2rem;
+      height: 1.2rem;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+      border-radius: 2.5rem;
+    }
+
+    .form-message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 500;
+      font-size: 0.95rem;
+      min-height: 2rem;
+    }
+
+    .form-message.success {
+      color: #2b6e3b;
+    }
+    .form-message.error {
+      color: #b54a4a;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .header h1 { font-size: 1.5rem; }
+      .subtitle { font-size: 1rem; }
+      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem; }
+      .card img { height: 120px; }
+      .btn-primary { padding: 0.8rem 2.5rem; font-size: 1.05rem; }
+      .modal-box { padding: 1.8rem 1.2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .cards-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+      .card { padding: 0.8rem 0.6rem; }
+      .card h3 { font-size: 0.9rem; }
+      .card p { font-size: 0.75rem; }
+      .card img { height: 90px; }
+      .header h1 { font-size: 1.25rem; }
+    }
+  
+
+    /* ===== طراحی پس زمینه سالم زیستان ===== */
+    body {
+      position: relative;
+      background:
+        linear-gradient(rgba(249,244,235,.88), rgba(249,244,235,.92)),
+        url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=60');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -30px;
+      background: url('https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1600&q=60') center/cover;
+      filter: blur(12px);
+      opacity: .12;
+      z-index: -1;
+    }
+
+    .header {
+      background:
+        linear-gradient(rgba(255,250,243,.78),rgba(245,237,228,.86)),
+        url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1000&q=60') center/cover;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,.78);
+      backdrop-filter: blur(6px);
+    }
+
+    .card::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      opacity:.13;
+      z-index:0;
+    }
+
+    .card img,.card h3,.card p {position:relative;z-index:1;}
+
+    .card:nth-child(1)::before {background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600');}
+    .card:nth-child(2)::before {background-image:url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600');}
+    .card:nth-child(3)::before {background-image:url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600');}
+    .card:nth-child(4)::before {background-image:url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600');}
+    .card:nth-child(5)::before {background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600');}
+    .card:nth-child(6)::before {background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600');}
+    .card:nth-child(7)::before {background-image:url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600');}
+    .card:nth-child(8)::before {background-image:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600');}
+    .card:nth-child(9)::before {background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600');}
+    .card:nth-child(10)::before {background-image:url('https://images.unsplash.com/photo-1472396961693-142e6e269027?w=600');}
+
+    .modal-box {
+      background:
+        linear-gradient(rgba(252,249,242,.92),rgba(252,249,242,.96)),
+        url('https://images.unsplash.com/photo-1497250681960-ef046c08a56e?w=900') center/cover;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== هدر ===== -->
+  <header class="header">
+    <div class="container">
+      <h1>🏛️ باشگاه مشتریان <span class="highlight">سالم زیستان خانه احسان</span></h1>
+      <p class="subtitle">مزایای انحصاری خود را انتخاب کنید و از یک زندگی سالم و پویا لذت ببرید</p>
+    </div>
+  </header>
+
+  <!-- ===== شبکه کارت‌ها ===== -->
+  <main class="container">
+    <section class="cards-grid" id="cardsGrid">
+      <!-- کارت‌ها توسط JS تولید می‌شوند -->
+    </section>
+
+    <div class="btn-wrapper">
+      <button id="continueBtn" class="btn-primary">ادامه</button>
+    </div>
+  </main>
+
+  <!-- ===== مودال فرم ===== -->
+  <div id="modal" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h2>تکمیل اطلاعات</h2>
+      <form id="infoForm" novalidate>
+        <div class="form-group">
+          <label for="fullName">نام و نام خانوادگی <span class="required">*</span></label>
+          <input type="text" id="fullName" placeholder="مثلاً احسان محمدی" required />
+          <span class="error-msg" id="nameError"></span>
+        </div>
+        <div class="form-group">
+          <label for="mobile">شماره موبایل <span class="required">*</span></label>
+          <input type="tel" id="mobile" placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹" required />
+          <span class="error-msg" id="mobileError"></span>
+        </div>
+        <div class="form-group">
+          <label for="description">توضیحات (اختیاری)</label>
+          <textarea id="description" rows="3" placeholder="نظر یا درخواست خاص خود را بنویسید..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-submit">ثبت و ارسال</button>
+        <div id="formMessage" class="form-message"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== تمام کدهای JavaScript ===== -->
+  <script>
+    // ============================================================
+    //  متغیر آدرس Google Apps Script (این را حتماً تغییر دهید)
+    // ============================================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz.../exec';
+
+    // ============================================================
+    //  داده‌های کارت‌ها (مزایا)
+    // ============================================================
+    const benefits = [
+      { id: 1, title: 'طرح‌های آموزشی و سمینارها', desc: 'سلامت ذهن و جسم با کارگاه‌های تخصصی', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800' },
+      { id: 2, title: 'مشاوره رایگان سبک زندگی', desc: 'برنامه‌ریزی سالم و متناسب با شما', img: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800' },
+      { id: 3, title: 'ماساژ تخصصی و حرکات اصلاحی', desc: 'رفع خستگی و بهبود وضعیت بدنی', img: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800' },
+      { id: 4, title: 'حمام سنتی', desc: 'تجربه‌ای اصیل از پاکیزگی و آرامش', img: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=800' },
+      { id: 5, title: 'خدمات پیک و ارسال', desc: 'دریافت محصولات درب منزل', img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=800' },
+      { id: 6, title: 'کوهپیمایی گروهی', desc: 'همراه با طبیعت و دوستان جدید', img: 'https://images.unsplash.com/photo-1464278533981-50106e6176b1?w=800' },
+      { id: 7, title: 'دورهمی‌های شادمانه خانوادگی', desc: 'لحظات شاد کنار عزیزان', img: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800' },
+      { id: 8, title: 'شارژ کیف پول و کش بک', desc: 'بازگشت پول و پاداش خرید', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800' },
+      { id: 9, title: 'محصولات خاص و کمیاب', desc: 'دسترسی به کالاهای منحصربه‌فرد', img: 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=800' },
+      { id: 10, title: 'تخفیفات ویژه اماکن تفریحی', desc: 'مشهد و خراسان - علمی و گردشگری', img: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800' }
+    ];
+
+    // ============================================================
+    //  متغیرهای DOM
+    // ============================================================
+    const cardsGrid = document.getElementById('cardsGrid');
+    const continueBtn = document.getElementById('continueBtn');
+    const modal = document.getElementById('modal');
+    const modalClose = document.getElementById('modalClose');
+    const infoForm = document.getElementById('infoForm');
+    const fullName = document.getElementById('fullName');
+    const mobile = document.getElementById('mobile');
+    const description = document.getElementById('description');
+    const nameError = document.getElementById('nameError');
+    const mobileError = document.getElementById('mobileError');
+    const formMessage = document.getElementById('formMessage');
+
+    let selectedCards = new Set();
+
+    // ============================================================
+    //  رندر کارت‌ها
+    // ============================================================
+    function renderCards() {
+      cardsGrid.innerHTML = '';
+      benefits.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = item.id;
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.title}" loading="lazy" />
+          <h3>${item.title}</h3>
+          <p>${item.desc}</p>
+        `;
+        card.addEventListener('click', () => toggleCard(item.id));
+        cardsGrid.appendChild(card);
+      });
+    }
+
+    // ============================================================
+    //  انتخاب / لغو انتخاب
+    // ============================================================
+    function toggleCard(id) {
+      if (selectedCards.has(id)) selectedCards.delete(id);
+      else selectedCards.add(id);
+      updateCardsUI();
+    }
+
+    function updateCardsUI() {
+      document.querySelectorAll('.card').forEach(card => {
+        const id = Number(card.dataset.id);
+        card.classList.toggle('selected', selectedCards.has(id));
+      });
+    }
+
+    // ============================================================
+    //  مودال
+    // ============================================================
+    function openModal() {
+      if (selectedCards.size === 0) {
+        alert('لطفاً حداقل یک گزینه را انتخاب کنید.');
+        return;
+      }
+      formMessage.textContent = '';
+      formMessage.className = 'form-message';
+      fullName.value = '';
+      mobile.value = '';
+      description.value = '';
+      nameError.textContent = '';
+      mobileError.textContent = '';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // ============================================================
+    //  اعتبارسنجی موبایل ایران
+    // ============================================================
+    function validateMobile(mobileStr) {
+      return /^09[0-9]{9}$/.test(mobileStr.trim());
+    }
+
+    // ============================================================
+    //  ارسال فرم
+    // ============================================================
+    async function submitForm(event) {
+      event.preventDefault();
+
+      const name = fullName.value.trim();
+      if (!name) {
+        nameError.textContent = 'نام و نام خانوادگی اجباری است';
+        return;
+      } else {
+        nameError.textContent = '';
+      }
+
+      const mobileVal = mobile.value.trim();
+      if (!mobileVal) {
+        mobileError.textContent = 'شماره موبایل اجباری است';
+        return;
+      } else if (!validateMobile(mobileVal)) {
+        mobileError.textContent = 'شماره موبایل معتبر ایران (مثلاً ۰۹۱۲۳۴۵۶۷۸۹) وارد کنید';
+        return;
+      } else {
+        mobileError.textContent = '';
+      }
+
+      const selectedTitles = benefits
+        .filter(b => selectedCards.has(b.id))
+        .map(b => b.title)
+        .join(' | ');
+
+      const payload = {
+        name: name,
+        mobile: mobileVal,
+        description: description.value.trim() || 'ندارد',
+        selectedOptions: selectedTitles || 'هیچ',
+        timestamp: new Date().toLocaleString('fa-IR', { timeZone: 'Asia/Tehran' }),
+        userAgent: navigator.userAgent
+      };
+
+      const submitBtn = infoForm.querySelector('.btn-submit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'در حال ارسال...';
+      formMessage.textContent = '';
+      formMessage.className = 'form-message';
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        formMessage.textContent = '✅ اطلاعات با موفقیت ثبت شد!';
+        formMessage.className = 'form-message success';
+
+        fullName.value = '';
+        mobile.value = '';
+        description.value = '';
+        selectedCards.clear();
+        updateCardsUI();
+
+        setTimeout(() => closeModal(), 1500);
+      } catch (error) {
+        console.error('خطا:', error);
+        formMessage.textContent = '❌ خطا در ارسال. لطفاً دوباره تلاش کنید.';
+        formMessage.className = 'form-message error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ثبت و ارسال';
+      }
+    }
+
+    // ============================================================
+    //  رویدادها
+    // ============================================================
+    continueBtn.addEventListener('click', openModal);
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    infoForm.addEventListener('submit', submitForm);
+
+    // ============================================================
+    //  اجرا
+    // ============================================================
+    renderCards();
+  </script>
+</body>
+</html>
