@@ -1,1859 +1,1658 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImageForge 2026 | سایت مهناز</title>
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #111827;
-            --text-primary: #f0f4ff;
-            --text-secondary: #94a3b8;
-            --glass-bg: rgba(255,255,255,0.03);
-            --glass-border: rgba(255,255,255,0.06);
-            --shadow: rgba(0,0,0,0.5);
-            --accent-1: #00d4ff;
-            --accent-2: #7c3aed;
-            --accent-3: #06f7a3;
-            --accent-gradient: linear-gradient(135deg, #00d4ff, #7c3aed, #06f7a3);
-            --radius: 18px;
-            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --welcome-glow: 0 0 40px rgba(255, 107, 107, 0.3);
-        }
-
-        [data-theme="light"] {
-            --bg-primary: #f0f4fc;
-            --bg-secondary: #e8edf5;
-            --text-primary: #0b1a33;
-            --text-secondary: #4d6b92;
-            --glass-bg: rgba(255,255,255,0.6);
-            --glass-border: rgba(0,0,0,0.08);
-            --shadow: rgba(0,0,0,0.08);
-            --welcome-glow: 0 0 40px rgba(255, 107, 107, 0.2);
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-primary);
-            min-height: 100vh;
-            padding: 16px;
-            color: var(--text-primary);
-            transition: var(--transition);
-            background-image:
-                radial-gradient(ellipse at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 107, 0.03) 0%, transparent 70%);
-        }
-
-        [data-theme="light"] body {
-            background-image:
-                radial-gradient(ellipse at 10% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(255, 107, 107, 0.05) 0%, transparent 70%);
-        }
-
-        .container { max-width: 1440px; margin: 0 auto; }
-
-        .header {
-            text-align: center;
-            padding: 20px 20px 16px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius) var(--radius) 0 0;
-            transition: var(--transition);
-            box-shadow: 0 4px 30px var(--shadow);
-        }
-
-        .header .logo {
-            display: inline-block;
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header .logo span { font-weight: 300; -webkit-text-fill-color: var(--text-secondary); }
-
-        .header .subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-        }
-
-        .header .subtitle .heart { color: #ff6b6b; display: inline-block; animation: heartbeat 1.5s ease-in-out infinite; }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-        }
-
-        .header .year-badge {
-            display: inline-block;
-            background: var(--accent-gradient);
-            padding: 2px 14px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 0.7rem;
-            color: white;
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-        }
-
-        .theme-toggle-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-            gap: 12px;
-        }
-
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 60px;
-            padding: 3px 5px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            width: 90px;
-        }
-
-        .theme-toggle:hover { border-color: var(--accent-1); }
-
-        .theme-toggle .toggle-track {
-            position: relative;
-            width: 100%;
-            height: 24px;
-            border-radius: 60px;
-            background: var(--bg-secondary);
-            transition: var(--transition);
-        }
-
-        .theme-toggle .toggle-thumb {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--accent-gradient);
-            transition: var(--transition);
-            box-shadow: 0 2px 10px rgba(0, 212, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-        }
-
-        [data-theme="light"] .theme-toggle .toggle-thumb { left: calc(100% - 22px); }
-
-        .theme-toggle .toggle-label {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.5rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            pointer-events: none;
-        }
-
-        .theme-toggle .toggle-label.light-label { left: 8px; }
-        .theme-toggle .toggle-label.dark-label { right: 8px; }
-
-        .badge-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 4px;
-            margin: 8px 0 2px;
-        }
-
-        .badge {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 2px 10px;
-            border-radius: 40px;
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-
-        .badge:hover { border-color: var(--accent-1); color: var(--text-primary); }
-        .badge.green { border-color: var(--accent-3); color: var(--accent-3); }
-        .badge.upscale { border-color: var(--accent-1); color: var(--accent-1); }
-        .badge.pink { border-color: #ff6b6b; color: #ff6b6b; }
-        .badge.original { border-color: #fbbf24; color: #fbbf24; }
-
-        /* ===== Presets ===== */
-        .presets-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-            padding: 12px 16px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-left: 1px solid var(--glass-border);
-            border-right: 1px solid var(--glass-border);
-            transition: var(--transition);
-        }
-
-        .preset {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .preset:hover {
-            border-color: var(--accent-1);
-            color: var(--text-primary);
-            transform: translateY(-1px);
-        }
-
-        .preset.active {
-            background: var(--accent-gradient);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
-        }
-
-        .upload-section {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 0 0 var(--radius) var(--radius);
-            padding: 16px 20px 20px;
-            margin-bottom: 20px;
-            transition: var(--transition);
-            box-shadow: 0 4px 30px var(--shadow);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .upload-area {
-            background: var(--glass-bg);
-            border: 2px dashed var(--glass-border);
-            border-radius: var(--radius);
-            padding: 30px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            aspect-ratio: 1/1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            order: 2;
-        }
-
-        .upload-area:hover {
-            border-color: var(--accent-1);
-            background: rgba(0, 212, 255, 0.05);
-            transform: scale(1.02);
-        }
-
-        .upload-area .icon { font-size: 3rem; display: block; margin-bottom: 6px; }
-        .upload-area h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 3px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .upload-area p { color: var(--text-secondary); font-size: 0.75rem; }
-        .upload-area .paste-hint {
-            margin-top: 8px;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            opacity: 0.6;
-        }
-        .upload-area input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .settings-wrapper { order: 1; display: flex; flex-direction: column; gap: 10px; }
-
-        .settings-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            padding: 12px 14px;
-            background: var(--glass-bg);
-            border-radius: var(--radius);
-            border: 1px solid var(--glass-border);
-            transition: var(--transition);
-        }
-
-        .setting-item { display: flex; flex-direction: column; gap: 3px; }
-
-        .setting-item label {
-            font-weight: 600;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-        }
-
-        .setting-item input,
-        .setting-item select {
-            padding: 5px 8px;
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            transition: var(--transition);
-            width: 100%;
-            outline: none;
-        }
-
-        .setting-item input:focus,
-        .setting-item select:focus {
-            border-color: var(--accent-1);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
-        }
-
-        .setting-item select option { background: var(--bg-secondary); color: var(--text-primary); }
-
-        [data-theme="light"] .setting-item input,
-        [data-theme="light"] .setting-item select { background: white; color: var(--text-primary); }
-
-        .stats-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            background: var(--glass-bg);
-            padding: 8px 14px;
-            border-radius: 60px;
-            border: 1px solid var(--glass-border);
-            gap: 4px;
-            transition: var(--transition);
-        }
-
-        .stats-bar .stat {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-        }
-
-        .stats-bar .stat span {
-            background: var(--bg-primary);
-            padding: 1px 10px;
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-            font-weight: 700;
-            color: var(--text-primary);
-            transition: var(--transition);
-        }
-
-        .action-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-        }
-
-        .btn {
-            border: none;
-            padding: 6px 16px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-        }
-
-        .btn-primary {
-            background: var(--accent-gradient);
-            border: none;
-            color: white;
-            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2);
-        }
-
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3); }
-        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-        .btn-success {
-            background: linear-gradient(135deg, #06f7a3, #00d4ff);
-            border: none;
-            color: #0a0e1a;
-        }
-
-        .btn-success:hover { transform: translateY(-2px); }
-        .btn-success:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .btn-zip {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            border: none;
-            color: #0a0e1a;
-        }
-
-        .btn-zip:hover { transform: translateY(-2px); }
-        .btn-zip:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .btn-outline:hover { border-color: var(--accent-1); background: rgba(0, 212, 255, 0.05); }
-
-        .progress-bar {
-            width: 100%;
-            height: 3px;
-            background: var(--glass-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 4px 0;
-        }
-
-        .progress-bar .progress-fill {
-            height: 100%;
-            background: var(--accent-gradient);
-            transition: width 0.5s ease;
-            width: 0%;
-            border-radius: 10px;
-        }
-
-        .status-msg {
-            text-align: center;
-            font-weight: 500;
-            padding: 10px 14px;
-            background: var(--glass-bg);
-            border-radius: 60px;
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            transition: var(--transition);
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.8;
-        }
-
-        .status-msg.success { border-color: var(--accent-3); color: var(--accent-3); }
-        .status-msg.warning { border-color: #f59e0b; color: #f59e0b; }
-        .status-msg.error { border-color: #ef4444; color: #ef4444; }
-        .status-msg.welcome {
-            border-color: #ff6b6b;
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.05);
-            box-shadow: var(--welcome-glow);
-            font-size: 0.85rem;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 14px 0 10px;
-        }
-
-        .image-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 10px;
-            transition: var(--transition);
-        }
-
-        .image-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(0, 212, 255, 0.2);
-            box-shadow: 0 20px 60px var(--shadow);
-        }
-
-        .image-card .img-wrap {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 10px;
-            overflow: hidden;
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-        }
-
-        .image-card .img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .image-card .card-footer {
-            margin-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .image-card .file-name-input {
-            width: 100%;
-            padding: 3px 6px;
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-size: 0.7rem;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .image-card .file-name-input:focus {
-            border-color: var(--accent-1);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
-        }
-
-        .image-card .file-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.6rem;
-            color: var(--text-secondary);
-        }
-
-        .image-card .file-size {
-            background: var(--glass-bg);
-            padding: 1px 8px;
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .image-card .status-badge {
-            font-size: 0.5rem;
-            padding: 1px 8px;
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-        }
-
-        .image-card .status-badge.done { border-color: var(--accent-3); color: var(--accent-3); }
-        .image-card .status-badge.processing { border-color: #f59e0b; color: #f59e0b; }
-        .image-card .status-badge.error { border-color: #ef4444; color: #ef4444; }
-        .image-card .status-badge.upscaled { border-color: var(--accent-1); color: var(--accent-1); }
-
-        .image-card .btn-group {
-            display: flex;
-            gap: 4px;
-            margin-top: 4px;
-            flex-wrap: wrap;
-        }
-
-        .image-card .btn-group .btn-sm {
-            padding: 2px 8px;
-            font-size: 0.55rem;
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            background: var(--glass-bg);
-            color: var(--text-secondary);
-        }
-
-        .image-card .btn-group .btn-sm:hover {
-            border-color: var(--accent-1);
-            color: var(--text-primary);
-        }
-
-        .image-card .btn-group .btn-sm.download { border-color: var(--accent-1); color: var(--accent-1); }
-        .image-card .btn-group .btn-sm.download:hover { background: var(--accent-1); color: var(--bg-primary); }
-        .image-card .btn-group .btn-sm.upscale-btn { border-color: var(--accent-2); color: var(--accent-2); }
-        .image-card .btn-group .btn-sm.upscale-btn:hover { background: var(--accent-2); color: white; }
-        .image-card .btn-group .btn-sm.compare-btn { border-color: #fbbf24; color: #fbbf24; }
-        .image-card .btn-group .btn-sm.compare-btn:hover { background: #fbbf24; color: var(--bg-primary); }
-        .image-card .btn-group .btn-sm.remove { border-color: #ef4444; color: #ef4444; }
-        .image-card .btn-group .btn-sm.remove:hover { background: #ef4444; color: white; }
-
-        .seo-footer {
-            text-align: center;
-            margin-top: 24px;
-            padding: 16px;
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            border-top: 1px solid var(--glass-border);
-            opacity: 0.6;
-            transition: var(--transition);
-        }
-
-        .seo-footer .heart { color: #ff6b6b; }
-
-        /* ===== Modals ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.active { display: flex; opacity: 1; }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 20px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            color: var(--text-primary);
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            z-index: 10;
-        }
-
-        .modal-close:hover { border-color: #ef4444; color: #ef4444; }
-
-        .modal-title {
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Compare Slider */
-        .compare-container {
-            position: relative;
-            width: 100%;
-            max-height: 65vh;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: ew-resize;
-            user-select: none;
-            margin: 0 auto;
-            --pos: 50%;
-        }
-
-        .compare-container img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-            -webkit-user-drag: none;
-        }
-
-        .compare-after {
-            clip-path: inset(0 calc(100% - var(--pos)) 0 0);
-        }
-
-        .compare-label {
-            position: absolute;
-            top: 12px;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .compare-label.left { left: 12px; }
-        .compare-label.right { right: 12px; }
-
-        .compare-handle {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: var(--pos);
-            width: 3px;
-            background: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.6);
-            transform: translateX(-50%);
-            pointer-events: none;
-            z-index: 4;
-        }
-
-        .compare-handle::after {
-            content: '⇔';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: white;
-            color: #0a0e1a;
-            font-size: 1.3rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-
-        .compare-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 12px;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-        }
-
-        .compare-info span {
-            background: var(--glass-bg);
-            padding: 4px 12px;
-            border-radius: 40px;
-            border: 1px solid var(--glass-border);
-        }
-
-        /* Summary */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .summary-stat {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 16px 12px;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .summary-stat.highlight { border-color: var(--accent-1); }
-        .summary-stat.success {
-            border-color: var(--accent-3);
-            background: rgba(6, 247, 163, 0.05);
-        }
-
-        .summary-value {
-            font-size: 1.4rem;
-            font-weight: 800;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 4px;
-        }
-
-        .summary-label {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .summary-msg {
-            text-align: center;
-            margin-top: 16px;
-            padding: 12px;
-            background: rgba(6, 247, 163, 0.05);
-            border: 1px solid var(--accent-3);
-            border-radius: 12px;
-            color: var(--accent-3);
-            font-size: 0.8rem;
-            font-weight: 600;
-            line-height: 1.8;
-        }
-
-        @media (max-width: 900px) {
-            .upload-section { grid-template-columns: 1fr; }
-            .upload-area { aspect-ratio: auto; padding: 24px 16px; order: 1; }
-            .settings-wrapper { order: 2; }
-            .settings-panel { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media (max-width: 600px) {
-            .settings-panel { grid-template-columns: 1fr; }
-            .header .logo { font-size: 1.8rem; }
-            .gallery-grid { grid-template-columns: 1fr; }
-            .stats-bar { flex-direction: column; align-items: stretch; gap: 3px; }
-            .action-bar .btn { width: 100%; justify-content: center; }
-            .presets-bar .preset { flex: 1; justify-content: center; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b14">
+<title>ImageForge 2026 | سایت مهناز</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root,[data-theme="dark"]{
+  --bg-primary:#080b14;--bg-elevated:#0f1523;--bg-secondary:#161e30;--bg-hover:#1c2740;
+  --text-primary:#e8eef9;--text-secondary:#8b9bb4;--text-muted:#5a6b85;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
+  --accent-1:#38bdf8;--accent-2:#8b5cf6;--accent-3:#34d399;
+  --accent-warm:#fb7185;--accent-warning:#f59e0b;--accent-error:#ef4444;
+  --gradient-primary:linear-gradient(135deg,#38bdf8,#8b5cf6);
+  --gradient-warm:linear-gradient(135deg,#fb7185,#f59e0b);
+  --gradient-success:linear-gradient(135deg,#34d399,#38bdf8);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.2);--shadow-md:0 4px 12px rgba(0,0,0,0.25);--shadow-lg:0 16px 48px rgba(0,0,0,0.35);
+  --glass:rgba(255,255,255,0.03);--glass-border:rgba(255,255,255,0.06);
+  --radius-sm:8px;--radius:12px;--radius-lg:18px;--radius-xl:24px;
+  --ease:cubic-bezier(0.4,0,0.2,1);--ease-bounce:cubic-bezier(0.34,1.56,0.64,1);
+  --aurora-1:rgba(56,189,248,0.08);--aurora-2:rgba(139,92,246,0.08);
+}
+
+[data-theme="light"]{
+  --bg-primary:#f8fafc;--bg-elevated:#ffffff;--bg-secondary:#f1f5f9;--bg-hover:#e2e8f0;
+  --text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);
+  --glass:rgba(255,255,255,0.7);--glass-border:rgba(0,0,0,0.06);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.05);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 16px 48px rgba(0,0,0,0.1);
+  --aurora-1:rgba(56,189,248,0.15);--aurora-2:rgba(139,92,246,0.12);
+}
+
+[data-theme="rose"]{
+  --bg-primary:#1a0a14;--bg-elevated:#251018;--bg-secondary:#321520;--bg-hover:#3d1a28;
+  --text-primary:#ffe4ed;--text-secondary:#d4a3b5;--text-muted:#8f6373;
+  --accent-1:#fb7185;--accent-2:#f472b6;--accent-3:#fda4af;
+  --gradient-primary:linear-gradient(135deg,#fb7185,#f472b6);
+  --glass:rgba(255,107,107,0.04);--glass-border:rgba(251,113,133,0.12);
+  --border:rgba(251,113,133,0.1);--border-strong:rgba(251,113,133,0.2);
+  --aurora-1:rgba(251,113,133,0.12);--aurora-2:rgba(244,114,182,0.1);
+}
+
+[data-theme="ocean"]{
+  --bg-primary:#051220;--bg-elevated:#0a1e33;--bg-secondary:#0f2a45;--bg-hover:#153757;
+  --text-primary:#d8eefc;--text-secondary:#7fa8c4;--text-muted:#4d7a99;
+  --accent-1:#0ea5e9;--accent-2:#06b6d4;--accent-3:#22d3ee;
+  --gradient-primary:linear-gradient(135deg,#0ea5e9,#06b6d4);
+  --aurora-1:rgba(14,165,233,0.12);--aurora-2:rgba(6,182,212,0.1);
+}
+
+[data-theme="forest"]{
+  --bg-primary:#0a1a10;--bg-elevated:#12281a;--bg-secondary:#1a3724;--bg-hover:#22462e;
+  --text-primary:#d8f5e0;--text-secondary:#8bc4a0;--text-muted:#5a8f6e;
+  --accent-1:#10b981;--accent-2:#34d399;--accent-3:#6ee7b7;
+  --gradient-primary:linear-gradient(135deg,#10b981,#34d399);
+  --aurora-1:rgba(16,185,129,0.12);--aurora-2:rgba(52,211,153,0.1);
+}
+
+html,body{min-height:100vh}
+body{
+  font-family:'Vazirmatn',system-ui,sans-serif;
+  background:var(--bg-primary);color:var(--text-primary);
+  font-feature-settings:'ss01';letter-spacing:-0.01em;
+  transition:background 0.4s,color 0.4s;overflow-x:hidden;line-height:1.6;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 30%,var(--aurora-1),transparent 40%),
+    radial-gradient(circle at 80% 70%,var(--aurora-2),transparent 40%),
+    radial-gradient(circle at 50% 100%,rgba(52,211,153,0.04),transparent 40%);
+  animation:aurora 25s ease-in-out infinite;transition:background 0.4s;
+}
+@keyframes aurora{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-30px,20px) scale(1.05)}66%{transform:translate(20px,-20px) scale(0.98)}}
+
+::selection{background:var(--accent-2);color:white}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:10px;border:2px solid var(--bg-primary)}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+
+/* ===== Header ===== */
+.app-header{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb,var(--bg-primary) 75%,transparent);
+  backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.logo-group{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.logo-mark{
+  width:40px;height:40px;border-radius:12px;background:var(--gradient-primary);
+  display:grid;place-items:center;font-size:1.3rem;
+  box-shadow:0 8px 24px rgba(56,189,248,0.25);transition:transform 0.3s var(--ease-bounce);
+}
+.logo-group:hover .logo-mark{transform:rotate(-8deg) scale(1.05)}
+.logo-text{font-size:1.3rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1}
+.logo-text .accent{background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:0.7rem;color:var(--text-muted);font-weight:500;margin-top:2px}
+.header-actions{display:flex;align-items:center;gap:8px}
+
+.theme-dots{display:flex;gap:6px;padding:4px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:40px}
+.theme-dot{
+  width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;
+  transition:all 0.2s var(--ease);position:relative;
+}
+.theme-dot:hover{transform:scale(1.15)}
+.theme-dot.active{border-color:var(--text-primary);box-shadow:0 0 0 2px var(--bg-elevated)}
+.theme-dot[data-t="dark"]{background:linear-gradient(135deg,#080b14,#38bdf8)}
+.theme-dot[data-t="light"]{background:linear-gradient(135deg,#f8fafc,#38bdf8)}
+.theme-dot[data-t="rose"]{background:linear-gradient(135deg,#1a0a14,#fb7185)}
+.theme-dot[data-t="ocean"]{background:linear-gradient(135deg,#051220,#0ea5e9)}
+.theme-dot[data-t="forest"]{background:linear-gradient(135deg,#0a1a10,#10b981)}
+.theme-dot[data-t="auto"]{background:linear-gradient(135deg,#38bdf8 50%,#f59e0b 50%)}
+
+/* ===== Layout ===== */
+.app-body{
+  display:grid;grid-template-columns:340px 1fr;gap:24px;
+  max-width:1600px;margin:0 auto;padding:24px;
+}
+
+/* ===== Sidebar ===== */
+.sidebar{
+  position:sticky;top:84px;height:calc(100vh - 108px);
+  overflow-y:auto;padding-left:4px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.sidebar::-webkit-scrollbar{width:6px}
+
+.panel{
+  background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:16px;transition:border-color 0.2s;
+}
+.panel:hover{border-color:var(--border-strong)}
+.panel-title{
+  font-size:0.75rem;font-weight:700;color:var(--text-secondary);
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* Presets */
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.preset{
+  background:var(--bg-secondary);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 8px;cursor:pointer;
+  font-family:inherit;font-size:0.72rem;font-weight:600;color:var(--text-secondary);
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:all 0.2s var(--ease);
+}
+.preset:hover{border-color:var(--accent-1);color:var(--text-primary);transform:translateY(-1px)}
+.preset.active{background:var(--gradient-primary);color:white;border-color:transparent;box-shadow:0 4px 16px rgba(56,189,248,0.3)}
+.preset .icon{font-size:1.2rem}
+
+/* Settings */
+.setting{margin-bottom:10px}
+.setting:last-child{margin-bottom:0}
+.setting-label{
+  font-size:0.72rem;font-weight:600;color:var(--text-secondary);
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;
+}
+.setting-label .value{
+  color:var(--accent-1);font-family:'Vazirmatn',monospace;font-weight:700;
+  background:var(--bg-secondary);padding:0 8px;border-radius:20px;font-size:0.7rem;
+}
+.setting input[type="number"],
+.setting select,
+.setting input[type="text"]{
+  width:100%;padding:8px 12px;background:var(--bg-secondary);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text-primary);font-family:inherit;font-size:0.82rem;font-weight:500;
+  transition:all 0.2s;outline:none;
+}
+.setting input:focus,.setting select:focus{
+  border-color:var(--accent-1);background:var(--bg-hover);
+  box-shadow:0 0 0 3px rgba(56,189,248,0.1);
+}
+
+/* Range slider */
+.range-row{display:flex;align-items:center;gap:8px}
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;width:100%;height:4px;
+  background:var(--bg-secondary);border-radius:10px;outline:none;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--accent-1);cursor:pointer;border:2px solid var(--bg-elevated);
+  box-shadow:0 2px 8px rgba(56,189,248,0.3);transition:transform 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+input[type="range"]::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;background:var(--accent-1);
+  cursor:pointer;border:2px solid var(--bg-elevated);
+}
+
+/* Actions */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.btn{
+  padding:10px 14px;border:none;border-radius:var(--radius-sm);
+  font-family:inherit;font-size:0.78rem;font-weight:600;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all 0.2s var(--ease);position:relative;overflow:hidden;
+  user-select:none;
+}
+.btn:active{transform:scale(0.97)}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important}
+.btn-primary{background:var(--gradient-primary);color:white;box-shadow:0 4px 16px rgba(56,189,248,0.3);grid-column:1/-1}
+.btn-primary:hover:not(:disabled){box-shadow:0 6px 24px rgba(56,189,248,0.4);transform:translateY(-1px)}
+.btn-success{background:var(--gradient-success);color:#0a1f1a}
+.btn-success:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(52,211,153,0.3)}
+.btn-warm{background:var(--gradient-warm);color:white}
+.btn-warm:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 16px rgba(251,113,133,0.3)}
+.btn-ghost{background:var(--bg-secondary);color:var(--text-primary);border:1px solid var(--border)}
+.btn-ghost:hover:not(:disabled){background:var(--bg-hover);border-color:var(--border-strong)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{
+  background:var(--bg-secondary);border-radius:var(--radius-sm);padding:10px 12px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.stat-label{font-size:0.62rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.stat-value{font-size:1.1rem;font-weight:800;color:var(--text-primary);line-height:1}
+.stat-value.green{color:var(--accent-3)}
+
+/* Progress */
+.progress{height:4px;background:var(--bg-secondary);border-radius:10px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--gradient-primary);width:0;transition:width 0.4s var(--ease);border-radius:10px}
+
+/* ===== Main ===== */
+.main{display:flex;flex-direction:column;gap:20px;min-width:0}
+
+/* Upload zone */
+.upload-zone{
+  position:relative;background:var(--bg-elevated);
+  border:2px dashed var(--border-strong);border-radius:var(--radius-xl);
+  padding:40px 24px;text-align:center;cursor:pointer;
+  transition:all 0.3s var(--ease);overflow:hidden;
+}
+.upload-zone:hover,.upload-zone.drag{
+  border-color:var(--accent-1);background:var(--bg-hover);
+  transform:translateY(-2px);box-shadow:0 12px 40px rgba(56,189,248,0.12);
+}
+.upload-zone.drag{border-style:solid}
+.upload-icon{
+  font-size:3rem;margin-bottom:12px;display:inline-block;
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.upload-title{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.upload-title .gradient{background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.upload-hint{font-size:0.8rem;color:var(--text-secondary)}
+.upload-kbd{
+  display:inline-flex;align-items:center;gap:4px;margin-top:10px;
+  font-size:0.7rem;color:var(--text-muted);
+  background:var(--bg-secondary);padding:4px 10px;border-radius:20px;
+  border:1px solid var(--border);
+}
+.upload-kbd kbd{
+  background:var(--bg-hover);border:1px solid var(--border);
+  padding:1px 6px;border-radius:4px;font-family:inherit;font-size:0.65rem;
+  font-weight:700;color:var(--text-primary);
+}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* Toolbar */
+.toolbar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px 14px;
+}
+.search-wrap{flex:1;min-width:180px;position:relative}
+.search-wrap svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);pointer-events:none}
+.search-input{
+  width:100%;padding:8px 40px 8px 12px;background:var(--bg-secondary);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text-primary);font-family:inherit;font-size:0.82rem;outline:none;
+  transition:all 0.2s;
+}
+.search-input:focus{border-color:var(--accent-1);box-shadow:0 0 0 3px rgba(56,189,248,0.1)}
+.tool-btn{
+  padding:8px 12px;background:var(--bg-secondary);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-secondary);font-family:inherit;
+  font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.tool-btn:hover{color:var(--text-primary);border-color:var(--border-strong)}
+.tool-btn.active{background:var(--accent-1);color:white;border-color:transparent}
+.tool-btn .count{
+  background:rgba(255,255,255,0.2);padding:0 6px;border-radius:20px;
+  font-size:0.65rem;font-weight:700;min-width:18px;text-align:center;
+}
+
+/* Gallery */
+.gallery{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:14px;
+}
+.card{
+  background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+  transition:all 0.3s var(--ease);position:relative;
+  animation:cardIn 0.4s var(--ease-bounce) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card:hover{
+  border-color:var(--border-strong);transform:translateY(-3px);
+  box-shadow:var(--shadow-lg);
+}
+.card.selected{border-color:var(--accent-1);box-shadow:0 0 0 2px var(--accent-1),0 8px 32px rgba(56,189,248,0.15)}
+
+.card-img{
+  position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--bg-secondary);
+}
+.card-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.5s var(--ease);
+}
+.card:hover .card-img img{transform:scale(1.05)}
+
+.card-overlay{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.6));
+  opacity:0;transition:opacity 0.2s;
+}
+.card:hover .card-overlay{opacity:1}
+
+.card-badge{
+  position:absolute;top:8px;right:8px;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);
+  padding:3px 8px;border-radius:20px;font-size:0.62rem;font-weight:700;
+  color:white;display:flex;align-items:center;gap:4px;
+}
+
+.card-select{
+  position:absolute;top:8px;left:8px;width:22px;height:22px;
+  border-radius:50%;border:2px solid white;background:rgba(0,0,0,0.4);
+  cursor:pointer;display:grid;place-items:center;opacity:0;transition:opacity 0.2s;
+  z-index:5;
+}
+.card:hover .card-select,.card.selected .card-select{opacity:1}
+.card.selected .card-select{background:var(--accent-1);border-color:var(--accent-1)}
+.card-select::after{content:'✓';font-size:0.75rem;color:white;font-weight:800;opacity:0}
+.card.selected .card-select::after{opacity:1}
+
+.card-body{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.card-name{
+  width:100%;padding:5px 8px;background:var(--bg-secondary);border:1px solid var(--border);
+  border-radius:6px;color:var(--text-primary);font-family:inherit;font-size:0.75rem;
+  font-weight:600;outline:none;transition:all 0.2s;
+}
+.card-name:focus{border-color:var(--accent-1);background:var(--bg-hover)}
+
+.card-meta{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:0.65rem}
+.card-size{color:var(--text-muted);font-weight:600}
+.card-size .arrow{color:var(--accent-3);margin:0 3px;font-weight:800}
+.card-size .after{color:var(--accent-3);font-weight:700}
+
+.badge{
+  padding:2px 8px;border-radius:20px;font-size:0.6rem;font-weight:700;
+  border:1px solid var(--border);color:var(--text-muted);
+}
+.badge.pending{color:var(--text-muted)}
+.badge.processing{color:var(--accent-warning);border-color:var(--accent-warning);animation:pulse 1.2s ease-in-out infinite}
+.badge.done{color:var(--accent-3);border-color:var(--accent-3)}
+.badge.error{color:var(--accent-error);border-color:var(--accent-error)}
+.badge.upscaled{color:var(--accent-1);border-color:var(--accent-1)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+
+.card-actions{
+  display:flex;gap:4px;opacity:0;transform:translateY(4px);
+  transition:all 0.2s var(--ease);
+}
+.card:hover .card-actions,.card.selected .card-actions{opacity:1;transform:translateY(0)}
+.card-actions button{
+  flex:1;padding:5px;border:1px solid var(--border);background:var(--bg-secondary);
+  border-radius:6px;cursor:pointer;font-size:0.8rem;color:var(--text-secondary);
+  transition:all 0.15s;font-family:inherit;
+}
+.card-actions button:hover{border-color:var(--accent-1);color:var(--accent-1);background:var(--bg-hover)}
+.card-actions button.danger:hover{border-color:var(--accent-error);color:var(--accent-error)}
+.card-actions button:disabled{opacity:0.4;cursor:not-allowed}
+
+/* Empty state */
+.empty{
+  grid-column:1/-1;text-align:center;padding:60px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  color:var(--text-muted);
+}
+.empty-icon{font-size:4rem;opacity:0.4}
+.empty-title{font-size:1.1rem;font-weight:700;color:var(--text-secondary)}
+.empty-text{font-size:0.85rem;max-width:400px}
+
+/* Skeleton */
+.skeleton{
+  background:linear-gradient(90deg,var(--bg-secondary) 25%,var(--bg-hover) 50%,var(--bg-secondary) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ===== Modals ===== */
+.modal{
+  position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:20px;opacity:0;transition:opacity 0.3s;
+}
+.modal.open{display:flex;opacity:1}
+.modal-content{
+  background:var(--bg-elevated);border:1px solid var(--border-strong);
+  border-radius:var(--radius-xl);padding:24px;max-width:900px;width:100%;
+  max-height:90vh;overflow-y:auto;position:relative;
+  box-shadow:var(--shadow-lg);animation:modalIn 0.3s var(--ease-bounce);
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{
+  position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;
+  background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);
+  cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:all 0.2s;z-index:10;
+}
+.modal-close:hover{background:var(--accent-error);color:white;border-color:var(--accent-error)}
+.modal-title{font-size:1.1rem;font-weight:800;margin-bottom:20px;text-align:center}
+
+/* Compare */
+.compare-box{
+  position:relative;width:100%;max-height:60vh;background:#000;
+  border-radius:var(--radius);overflow:hidden;cursor:ew-resize;
+  user-select:none;--pos:50%;touch-action:none;
+}
+.compare-box img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  pointer-events:none;-webkit-user-drag:none;
+}
+.compare-box .after{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.compare-label{
+  position:absolute;top:12px;padding:4px 12px;border-radius:20px;
+  font-size:0.7rem;font-weight:700;color:white;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);pointer-events:none;z-index:3;
+}
+.compare-label.before{right:12px}
+.compare-label.after{left:12px}
+.compare-handle{
+  position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:white;
+  transform:translateX(-50%);pointer-events:none;z-index:4;
+  box-shadow:0 0 20px rgba(0,0,0,0.6);
+}
+.compare-handle::after{
+  content:'⇔';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;border-radius:50%;background:white;color:#0a0e1a;
+  display:grid;place-items:center;font-size:1.2rem;font-weight:800;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.compare-info{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.compare-info span{
+  background:var(--bg-secondary);padding:6px 14px;border-radius:20px;
+  font-size:0.72rem;font-weight:600;color:var(--text-secondary);border:1px solid var(--border);
+}
+
+/* Summary */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.summary-stat{
+  background:var(--bg-secondary);padding:16px 10px;border-radius:var(--radius);
+  text-align:center;border:1px solid var(--border);transition:all 0.2s;
+}
+.summary-stat.highlight{border-color:var(--accent-3);background:rgba(52,211,153,0.05)}
+.summary-value{
+  font-size:1.4rem;font-weight:800;background:var(--gradient-primary);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:4px;line-height:1;
+}
+.summary-stat.highlight .summary-value{background:var(--gradient-success);-webkit-background-clip:text;background-clip:text}
+.summary-label{font-size:0.68rem;color:var(--text-muted);font-weight:600}
+.summary-message{
+  margin-top:16px;padding:16px;text-align:center;border-radius:var(--radius);
+  background:rgba(52,211,153,0.05);border:1px solid var(--accent-3);
+  color:var(--accent-3);font-weight:600;font-size:0.85rem;line-height:1.9;
+}
+
+/* Shortcuts */
+.shortcuts{display:flex;flex-direction:column;gap:8px}
+.shortcut-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 12px;background:var(--bg-secondary);border-radius:var(--radius-sm);
+}
+.shortcut-row kbd{
+  background:var(--bg-hover);border:1px solid var(--border);padding:2px 8px;
+  border-radius:6px;font-family:inherit;font-size:0.72rem;font-weight:700;
+  color:var(--text-primary);direction:ltr;
+}
+.shortcut-desc{font-size:0.8rem;color:var(--text-secondary)}
+
+/* Toast */
+#toasts{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2000;
+  display:flex;flex-direction:column-reverse;gap:8px;pointer-events:none;
+  max-width:calc(100vw - 40px);
+}
+.toast{
+  background:var(--bg-elevated);border:1px solid var(--border-strong);
+  border-radius:var(--radius);padding:10px 16px;
+  display:flex;align-items:center;gap:10px;
+  font-size:0.8rem;font-weight:600;color:var(--text-primary);
+  box-shadow:var(--shadow-lg);pointer-events:auto;
+  opacity:0;transform:translateY(20px);transition:all 0.3s var(--ease-bounce);
+  max-width:500px;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-color:var(--accent-3)}
+.toast.error{border-color:var(--accent-error)}
+.toast.warning{border-color:var(--accent-warning)}
+.toast-icon{font-size:1.1rem}
+
+/* Confetti */
+.confetti{
+  position:fixed;top:-10px;width:8px;height:8px;z-index:3000;pointer-events:none;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+
+/* Print */
+@media print{
+  body{background:white!important;color:black!important}
+  .app-header,.sidebar,.toolbar,.upload-zone,.gallery,.modal-close,.compare-box{display:none!important}
+  .modal{position:static!important;background:none!important;padding:0!important;opacity:1!important;display:block!important}
+  .modal-content{border:none!important;box-shadow:none!important;max-height:none!important;background:white!important;color:black!important}
+  .summary-stat,.summary-message{border-color:#ccc!important;background:#f9f9f9!important;color:black!important}
+  .summary-value{-webkit-text-fill-color:black!important;background:none!important;color:black!important}
+}
+
+/* ===== Responsive ===== */
+@media (max-width:1024px){
+  .app-body{grid-template-columns:1fr;gap:16px;padding:16px}
+  .sidebar{position:static;height:auto;overflow:visible;order:2}
+  .main{order:1}
+}
+@media (max-width:640px){
+  .app-header{padding:12px 16px}
+  .logo-text{font-size:1.1rem}
+  .logo-sub{font-size:0.62rem}
+  .logo-mark{width:34px;height:34px;font-size:1.1rem}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .presets{grid-template-columns:1fr 1fr 1fr}
+  .actions{grid-template-columns:1fr}
+  .btn-primary{grid-column:1}
+  .upload-zone{padding:28px 16px}
+  .upload-icon{font-size:2.2rem}
+  .theme-dot{width:18px;height:18px}
+}
+
+.hidden{display:none!important}
+</style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="logo">ImageForge <span>2026</span></div>
-        <div class="subtitle">✨ به سایت اختصاصی <span class="heart">❤️</span> مهناز جون خوش اومدی!</div>
-        <div class="year-badge">⚡ ویژه بهترین مهندس دنیا</div>
+<div id="toasts"></div>
 
-        <div class="theme-toggle-wrapper">
-            <div class="theme-toggle" id="themeToggle" role="button" tabindex="0">
-                <div class="toggle-track">
-                    <div class="toggle-thumb" id="toggleThumb">🌙</div>
-                    <span class="toggle-label light-label">☀️</span>
-                    <span class="toggle-label dark-label">🌙</span>
-                </div>
-            </div>
-        </div>
+<header class="app-header">
+  <div class="logo-group" id="logoGroup">
+    <div class="logo-mark">🚀</div>
+    <div>
+      <div class="logo-text">ImageForge <span class="accent">2026</span></div>
+      <div class="logo-sub">✨ سایت اختصاصی مهناز جون</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="theme-dots" id="themeDots">
+      <button class="theme-dot active" data-t="dark" title="تیره"></button>
+      <button class="theme-dot" data-t="light" title="روشن"></button>
+      <button class="theme-dot" data-t="rose" title="صورتی"></button>
+      <button class="theme-dot" data-t="ocean" title="اقیانوس"></button>
+      <button class="theme-dot" data-t="forest" title="جنگل"></button>
+      <button class="theme-dot" data-t="auto" title="خودکار"></button>
+    </div>
+    <button class="tool-btn" id="shortcutsBtn" title="میانبرهای کیبورد">⌨️</button>
+  </div>
+</header>
 
-        <div class="badge-group">
-            <span class="badge pink">💖 مهناز جون</span>
-            <span class="badge green">🟢 کاهش حجم واقعی</span>
-            <span class="badge upscale">⚖️ مقایسه قبل/بعد</span>
-            <span class="badge original">📦 خروجی ZIP</span>
-            <span class="badge">🎯 پریست‌های آماده</span>
-            <span class="badge">📊 گزارش نهایی</span>
-            <span class="badge">🌓 روز/شب</span>
-        </div>
+<div class="app-body">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="panel-title">🎯 پریست‌های آماده</div>
+      <div class="presets" id="presets">
+        <button class="preset" data-p="instagram"><span class="icon">📸</span>اینستاگرام</button>
+        <button class="preset" data-p="story"><span class="icon">📱</span>استوری</button>
+        <button class="preset" data-p="profile"><span class="icon">👤</span>پروفایل</button>
+        <button class="preset" data-p="web"><span class="icon">🌐</span>وب</button>
+        <button class="preset" data-p="print"><span class="icon">🖨️</span>چاپ</button>
+        <button class="preset" data-p="reset"><span class="icon">🔄</span>ریست</button>
+      </div>
     </div>
 
-    <!-- Presets -->
-    <div class="presets-bar">
-        <button class="preset" data-preset="instagram">📸 اینستاگرام</button>
-        <button class="preset" data-preset="story">📱 استوری</button>
-        <button class="preset" data-preset="profile">👤 پروفایل</button>
-        <button class="preset" data-preset="web">🌐 وب</button>
-        <button class="preset" data-preset="print">🖨️ چاپ</button>
+    <div class="panel">
+      <div class="panel-title">⚙️ تنظیمات پردازش</div>
+      <div class="setting">
+        <div class="setting-label"><span>🎯 حجم هدف</span><span class="value" id="sizeVal">70 KB</span></div>
+        <input type="range" id="targetSize" min="10" max="2000" value="70" step="5">
+      </div>
+      <div class="setting">
+        <label class="setting-label"><span>📐 سایز خروجی</span></label>
+        <select id="targetDim">
+          <option value="original">🔄 اصلی</option>
+          <option value="400">۴۰۰px</option>
+          <option value="600">۶۰۰px</option>
+          <option value="800" selected>۸۰۰px</option>
+          <option value="1024">۱۰۲۴px</option>
+          <option value="2048">۲۰۴۸px</option>
+          <option value="4096">۴۰۹۶px</option>
+        </select>
+      </div>
+      <div class="setting">
+        <label class="setting-label"><span>📐 نسبت تصویر</span></label>
+        <select id="cropRatio">
+          <option value="original" selected>اصلی (بدون برش)</option>
+          <option value="1:1">۱:۱ مربع</option>
+          <option value="4:3">۴:۳</option>
+          <option value="3:2">۳:۲</option>
+          <option value="16:9">۱۶:۹</option>
+          <option value="9:16">۹:۱۶ استوری</option>
+        </select>
+      </div>
+      <div class="setting">
+        <label class="setting-label"><span>📁 فرمت</span></label>
+        <select id="format">
+          <option value="image/jpeg" selected>JPEG</option>
+          <option value="image/webp">WebP (بهترین)</option>
+          <option value="image/png">PNG (بدون کاهش)</option>
+        </select>
+      </div>
+      <div class="setting">
+        <label class="setting-label"><span>🔍 بزرگ‌نمایی</span></label>
+        <select id="upscale">
+          <option value="none" selected>بدون</option>
+          <option value="2x">۲x</option>
+          <option value="4x">۴x</option>
+        </select>
+      </div>
     </div>
 
-    <div class="upload-section">
-        <div class="upload-area" id="uploadArea">
-            <span class="icon">🚀</span>
-            <h3>آپلود عکس</h3>
-            <p>بکشید یا کلیک کنید</p>
-            <p class="paste-hint">💡 یا با Ctrl+V پیست کنید</p>
-            <input type="file" id="fileInput" accept="image/*" multiple>
-        </div>
-
-        <div class="settings-wrapper">
-            <div class="settings-panel">
-                <div class="setting-item">
-                    <label>🎯 حجم هدف (KB)</label>
-                    <input type="number" id="targetSizeKB" value="70" min="10" max="5000">
-                </div>
-                <div class="setting-item">
-                    <label>📐 سایز خروجی</label>
-                    <select id="targetDimension">
-                        <option value="original">🔄 اصلی (همان سایز)</option>
-                        <option value="100">۱۰۰px</option>
-                        <option value="200">۲۰۰px</option>
-                        <option value="400">۴۰۰px</option>
-                        <option value="600">۶۰۰px</option>
-                        <option value="800" selected>۸۰۰px</option>
-                        <option value="1024">۱۰۲۴px</option>
-                        <option value="2048">۲۰۴۸px</option>
-                        <option value="4096">۴۰۹۶px (4K)</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label>📐 نسبت برش</label>
-                    <select id="cropMode">
-                        <option value="1:1">⬜ ۱:۱ (مربع)</option>
-                        <option value="4:3">۴:۳</option>
-                        <option value="3:2">۳:۲</option>
-                        <option value="16:9">۱۶:۹</option>
-                        <option value="9:16">۹:۱۶ (استوری)</option>
-                        <option value="original" selected>اصلی (بدون برش)</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label>📁 فرمت خروجی</label>
-                    <select id="outputFormat">
-                        <option value="image/jpeg" selected>JPEG</option>
-                        <option value="image/png">PNG (کاهش محدود)</option>
-                        <option value="image/webp">WebP (بهترین)</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label>🎨 فیلتر</label>
-                    <select id="filterMode">
-                        <option value="none">بدون فیلتر</option>
-                        <option value="sharpen">🔪 شارپنس ملایم</option>
-                        <option value="bw">⚫ سیاه‌سفید</option>
-                        <option value="vintage">🟫 وینتیج</option>
-                        <option value="bright">☀️ روشن‌تر</option>
-                        <option value="contrast">🎯 کنتراست</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label>🔍 بزرگ‌نمایی (اختیاری)</label>
-                    <select id="upscaleMode">
-                        <option value="none" selected>بدون افزایش</option>
-                        <option value="2x">⬆️ ۲x</option>
-                        <option value="4x">⬆️ ۴x</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="stats-bar">
-                <div class="stat">📸 <span id="totalCount">0</span></div>
-                <div class="stat">📦 <span id="totalSize">0</span></div>
-                <div class="stat">✅ <span id="processedCount">0</span></div>
-                <div class="stat">📊 <span id="reductionPercent">0%</span></div>
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-
-            <div class="action-bar">
-                <button class="btn btn-primary" id="processAllBtn" disabled>🚀 پردازش</button>
-                <button class="btn btn-success" id="downloadAllBtn" disabled>⬇️ دانلود همه</button>
-                <button class="btn btn-zip" id="zipBtn" disabled>📦 ZIP</button>
-                <button class="btn btn-outline" id="summaryBtn" disabled>📊 گزارش</button>
-                <button class="btn btn-outline" id="clearBtn">🗑️</button>
-                <button class="btn btn-outline" onclick="saveSettings()">💾</button>
-                <button class="btn btn-outline" onclick="loadSettings()">📂</button>
-            </div>
-
-            <div class="status-msg" id="statusMessage">🌸 در حال بارگذاری...</div>
-        </div>
+    <div class="panel">
+      <div class="panel-title">📊 آمار</div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">📸 عکس</div><div class="stat-value" id="statCount">0</div></div>
+        <div class="stat"><div class="stat-label">📦 حجم اصلی</div><div class="stat-value" id="statSize">0 B</div></div>
+        <div class="stat"><div class="stat-label">✅ پردازش‌شده</div><div class="stat-value" id="statDone">0</div></div>
+        <div class="stat"><div class="stat-label">📉 کاهش</div><div class="stat-value green" id="statReduction">0%</div></div>
+      </div>
+      <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
     </div>
 
-    <div class="gallery-grid" id="galleryGrid"></div>
-
-    <div class="seo-footer">
-        <p><strong>ImageForge 2026</strong> — ویژه <span class="heart">❤️</span> مهناز جون · بهترین مهندس دنیا</p>
-        <p style="margin-top:4px; opacity:0.5; font-size:0.65rem;">📐 حفظ نسبت تصویر · فشرده‌سازی هوشمند · مقایسه بصری</p>
+    <div class="panel">
+      <div class="panel-title">⚡ اقدامات</div>
+      <div class="actions">
+        <button class="btn btn-primary" id="processBtn" disabled>🚀 پردازش همه</button>
+        <button class="btn btn-success" id="zipBtn" disabled>📦 ZIP</button>
+        <button class="btn btn-warm" id="summaryBtn" disabled>📊 گزارش</button>
+        <button class="btn btn-ghost" id="undoBtn" disabled>↩️</button>
+        <button class="btn btn-ghost" id="clearBtn">🗑️ پاک</button>
+      </div>
     </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="upload-zone" id="uploadZone">
+      <span class="upload-icon">🚀</span>
+      <div class="upload-title">عکسهاتو <span class="gradient">اینجا بنداز</span></div>
+      <div class="upload-hint">کلیک کن، بکش یا از کلیپ‌بورد پیست کن</div>
+      <div class="upload-kbd"><kbd>Ctrl</kbd>+<kbd>V</kbd> پیست</div>
+      <input type="file" id="fileInput" accept="image/*" multiple>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="جستجو در گالری...">
+      </div>
+      <select class="tool-btn" id="sortSelect" style="cursor:pointer">
+        <option value="name">📝 نام</option>
+        <option value="size">📦 حجم</option>
+        <option value="status">✅ وضعیت</option>
+      </select>
+      <button class="tool-btn" id="selectAllBtn">☑️ انتخاب همه <span class="count hidden" id="selCount">0</span></button>
+    </div>
+
+    <div class="gallery" id="gallery"></div>
+  </main>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editModal">
+  <div class="modal-content" style="max-width:600px">
+    <button class="modal-close" data-close="editModal">✕</button>
+    <div class="modal-title">🎨 ویرایش تصویر</div>
+    <div style="background:var(--bg-secondary);border-radius:var(--radius);padding:10px;margin-bottom:16px;text-align:center">
+      <img id="editPreview" style="max-width:100%;max-height:250px;border-radius:8px">
+    </div>
+    <div class="setting">
+      <div class="setting-label"><span>💡 روشنایی</span><span class="value" id="editBrightnessVal">100%</span></div>
+      <input type="range" id="editBrightness" min="50" max="150" value="100">
+    </div>
+    <div class="setting">
+      <div class="setting-label"><span>🎯 کنتراست</span><span class="value" id="editContrastVal">100%</span></div>
+      <input type="range" id="editContrast" min="50" max="150" value="100">
+    </div>
+    <div class="setting">
+      <div class="setting-label"><span>🌈 اشباع رنگ</span><span class="value" id="editSaturationVal">100%</span></div>
+      <input type="range" id="editSaturation" min="0" max="200" value="100">
+    </div>
+    <div class="setting">
+      <label class="setting-label"><span>🔄 چرخش</span></label>
+      <select id="editRotation">
+        <option value="0">بدون چرخش</option>
+        <option value="90">۹۰ درجه</option>
+        <option value="180">۱۸۰ درجه</option>
+        <option value="270">۲۷۰ درجه</option>
+      </select>
+    </div>
+    <div class="setting">
+      <label class="setting-label"><span>🔀 قرینه</span></label>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost" id="flipH" style="flex:1">↔️ افقی</button>
+        <button class="btn btn-ghost" id="flipV" style="flex:1">↕️ عمودی</button>
+      </div>
+    </div>
+    <div class="setting">
+      <label class="setting-label"><span>💧 واترمارک متنی</span></label>
+      <input type="text" id="editWatermark" placeholder="مثلاً: Mahnaz">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-primary" id="editApply" style="flex:1">✅ ذخیره تغییرات</button>
+      <button class="btn btn-ghost" id="editReset">🔄 ریست</button>
+    </div>
+  </div>
 </div>
 
 <!-- Compare Modal -->
 <div class="modal" id="compareModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeCompare()">✕</button>
-        <div class="modal-title">⚖️ مقایسه قبل و بعد</div>
-        <div class="compare-container" id="compareContainer">
-            <img class="compare-before" id="compareBefore" alt="قبل">
-            <img class="compare-after" id="compareAfter" alt="بعد">
-            <span class="compare-label left">بعد ✨</span>
-            <span class="compare-label right">قبل 📷</span>
-            <div class="compare-handle"></div>
-        </div>
-        <div class="compare-info" id="compareInfo"></div>
+  <div class="modal-content" style="max-width:900px">
+    <button class="modal-close" data-close="compareModal">✕</button>
+    <div class="modal-title">⚖️ مقایسه قبل و بعد</div>
+    <div class="compare-box" id="compareBox">
+      <img class="before" id="compareBefore" alt="قبل">
+      <img class="after" id="compareAfter" alt="بعد">
+      <span class="compare-label before">📷 قبل</span>
+      <span class="compare-label after">✨ بعد</span>
+      <div class="compare-handle"></div>
     </div>
+    <div class="compare-info" id="compareInfo"></div>
+  </div>
 </div>
 
 <!-- Summary Modal -->
 <div class="modal" id="summaryModal">
-    <div class="modal-content" style="max-width: 600px;">
-        <button class="modal-close" onclick="closeSummary()">✕</button>
-        <div class="modal-title">📊 گزارش نهایی پردازش</div>
-        <div id="summaryContent"></div>
+  <div class="modal-content" style="max-width:600px">
+    <button class="modal-close" data-close="summaryModal">✕</button>
+    <div class="modal-title">📊 گزارش نهایی</div>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="summary-message" id="summaryMessage"></div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-primary" onclick="window.print()" style="flex:1">🖨️ ذخیره PDF / چاپ</button>
     </div>
+  </div>
+</div>
+
+<!-- Shortcuts Modal -->
+<div class="modal" id="shortcutsModal">
+  <div class="modal-content" style="max-width:500px">
+    <button class="modal-close" data-close="shortcutsModal">✕</button>
+    <div class="modal-title">⌨️ میانبرهای کیبورد</div>
+    <div class="shortcuts">
+      <div class="shortcut-row"><span class="shortcut-desc">پیست عکس از کلیپ‌بورد</span><kbd>Ctrl + V</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">پردازش همه عکس‌ها</span><kbd>Ctrl + Enter</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">انتخاب همه</span><kbd>Ctrl + A</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">حذف انتخاب‌شده‌ها</span><kbd>Delete</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">Undo</span><kbd>Ctrl + Z</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">ذخیره تنظیمات</span><kbd>Ctrl + S</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">نمایش این راهنما</span><kbd>?</kbd></div>
+      <div class="shortcut-row"><span class="shortcut-desc">بستن پنجره</span><kbd>Esc</kbd></div>
+    </div>
+  </div>
 </div>
 
 <script>
-(function() {
-    'use strict';
+(function(){
+'use strict';
 
-    // ===== Welcome =====
-    function showWelcomeMessage() {
-        const now = new Date();
-        const hour = now.getHours();
-        let timeGreeting = '';
-        if (hour >= 5 && hour < 12) timeGreeting = '🌅 صبح بخیر';
-        else if (hour >= 12 && hour < 17) timeGreeting = '🌤️ ظهر بخیر';
-        else if (hour >= 17 && hour < 21) timeGreeting = '🌇 عصر بخیر';
-        else timeGreeting = '🌙 شب بخیر';
+// ============ Constants ============
+const ENCOURAGEMENTS = [
+  '✨ آفرین مهناز جون! عکس‌ها آماده‌ست',
+  '🌸 فوق‌العاده بود! کیفیت و حجم، عالی',
+  '💎 دمت گرم! حرفه‌ای کار کردی',
+  '🚀 سریع و بی‌نقص، مثل همیشه',
+  '🌟 عالیه! این کارت تحسین داره',
+  '💖 مهناز، تو بهترین مهندسی',
+  '🎯 دقیق و تمیز، همین‌طور ادامه بده',
+  '🔥 آتیش زدی به این پردازش!',
+  '👑 ملکه فشرده‌سازی، بازم ترکوندی'
+];
 
-        const msg = document.getElementById('statusMessage');
-        msg.className = 'status-msg welcome';
-        msg.textContent = '';
-        const text = `${timeGreeting} مهناز جون! 🌸 ✨ به بهترین مهندس دنیا خوش اومدی! 🚀 سایت خودت آماده‌ست. 💎`;
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                msg.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 35);
-            }
-        }
-        setTimeout(typeWriter, 400);
+const PRESETS = {
+  instagram: { size: 200, dim: '1024', crop: '1:1', format: 'image/jpeg', upscale: 'none' },
+  story:     { size: 150, dim: '1024', crop: '9:16', format: 'image/webp', upscale: 'none' },
+  profile:   { size: 70,  dim: '400',  crop: '1:1', format: 'image/jpeg', upscale: 'none' },
+  web:       { size: 100, dim: '800',  crop: 'original', format: 'image/webp', upscale: 'none' },
+  print:     { size: 2000,dim: '2048', crop: 'original', format: 'image/jpeg', upscale: 'none' },
+  reset:     { size: 70,  dim: '800',  crop: 'original', format: 'image/jpeg', upscale: 'none' }
+};
+
+// ============ State ============
+const state = {
+  files: [],
+  idCounter: 0,
+  isProcessing: false,
+  selectedIds: new Set(),
+  searchQuery: '',
+  sortBy: 'name',
+  history: [],
+  compareUrl: null,
+  logoClicks: 0,
+  editingId: null,
+  editState: null
+};
+
+// ============ DOM ============
+const $ = id => document.getElementById(id);
+const fileInput = $('fileInput');
+const uploadZone = $('uploadZone');
+const gallery = $('gallery');
+const targetSize = $('targetSize');
+const targetDim = $('targetDim');
+const cropRatio = $('cropRatio');
+const formatEl = $('format');
+const upscale = $('upscale');
+const searchInput = $('searchInput');
+const sortSelect = $('sortSelect');
+const selCount = $('selCount');
+
+// ============ Helpers ============
+function fmtBytes(b){
+  if(!b || b === 0) return '0 B';
+  if(b < 1024) return b + ' B';
+  if(b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(2) + ' MB';
+}
+
+function getRatio(m){
+  return {'1:1':1,'4:3':4/3,'3:2':3/2,'16:9':16/9,'9:16':9/16}[m] || null;
+}
+
+function escapeHtml(s){
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ============ Toast ============
+function toast(msg, type = 'info'){
+  type = type || 'info';
+  const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = '<span class="toast-icon">' + icons[type] + '</span><span>' + escapeHtml(msg) + '</span>';
+  $('toasts').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 350);
+  }, 3500);
+}
+
+// ============ Theme ============
+function setTheme(t){
+  if(t === 'auto'){
+    const h = new Date().getHours();
+    document.documentElement.setAttribute('data-theme', (h >= 7 && h < 19) ? 'light' : 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', t);
+  }
+  localStorage.setItem('if_theme', t);
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.t === t));
+}
+
+document.querySelectorAll('.theme-dot').forEach(d => {
+  d.addEventListener('click', () => setTheme(d.dataset.t));
+});
+
+// ============ Confetti ============
+function confetti(){
+  const colors = ['#38bdf8','#8b5cf6','#34d399','#fb7185','#f59e0b'];
+  for(let i = 0; i < 40; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    c.style.animationDelay = (Math.random() * 0.4) + 's';
+    c.style.width = (Math.random() * 6 + 4) + 'px';
+    c.style.height = (Math.random() * 6 + 4) + 'px';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4500);
+  }
+}
+
+// ============ Files ============
+function addFiles(files){
+  let added = 0;
+  for(const f of files){
+    if(!f.type || !f.type.startsWith('image/')) continue;
+    if(f.size > 30 * 1024 * 1024){
+      toast(f.name + ' بزرگتر از ۳۰ مگابایته', 'warning');
+      continue;
     }
+    if(state.files.some(x => x.file.name === f.name && x.file.size === f.size)) continue;
 
-    // ===== Theme =====
-    const themeToggle = document.getElementById('themeToggle');
-    const toggleThumb = document.getElementById('toggleThumb');
-
-    function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        toggleThumb.textContent = theme === 'dark' ? '🌙' : '☀️';
-    }
-
-    function toggleTheme() {
-        const current = document.documentElement.getAttribute('data-theme') || 'dark';
-        setTheme(current === 'dark' ? 'light' : 'dark');
-    }
-
-    themeToggle.addEventListener('click', toggleTheme);
-    setTheme(localStorage.getItem('theme') || 'dark');
-
-    // ===== DOM =====
-    const fileInput = document.getElementById('fileInput');
-    const uploadArea = document.getElementById('uploadArea');
-    const galleryGrid = document.getElementById('galleryGrid');
-    const totalCount = document.getElementById('totalCount');
-    const totalSize = document.getElementById('totalSize');
-    const processedCount = document.getElementById('processedCount');
-    const reductionPercent = document.getElementById('reductionPercent');
-    const statusMessage = document.getElementById('statusMessage');
-    const processAllBtn = document.getElementById('processAllBtn');
-    const downloadAllBtn = document.getElementById('downloadAllBtn');
-    const zipBtn = document.getElementById('zipBtn');
-    const summaryBtn = document.getElementById('summaryBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const progressFill = document.getElementById('progressFill');
-
-    const targetSizeKB = document.getElementById('targetSizeKB');
-    const targetDimension = document.getElementById('targetDimension');
-    const cropMode = document.getElementById('cropMode');
-    const outputFormat = document.getElementById('outputFormat');
-    const filterMode = document.getElementById('filterMode');
-    const upscaleMode = document.getElementById('upscaleMode');
-
-    let filesList = [];
-    let idCounter = 0;
-    let isProcessing = false;
-    let compareObjectUrl = null;
-
-    // ===== Helpers =====
-    function formatBytes(bytes) {
-        if (!bytes || bytes === 0) return '0 B';
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-        return (bytes / 1048576).toFixed(2) + ' MB';
-    }
-
-    function getAspectRatio(mode) {
-        if (mode === '1:1') return 1;
-        if (mode === '4:3') return 4 / 3;
-        if (mode === '3:2') return 3 / 2;
-        if (mode === '16:9') return 16 / 9;
-        if (mode === '9:16') return 9 / 16;
-        return null;
-    }
-
-    function applyFilter(ctx, w, h, filter, imageData) {
-        if (filter === 'none' || !imageData) return;
-        const data = imageData.data;
-        const len = data.length;
-
-        if (filter === 'bw') {
-            for (let i = 0; i < len; i += 4) {
-                const g = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-                data[i] = data[i + 1] = data[i + 2] = g;
-            }
-        } else if (filter === 'vintage') {
-            for (let i = 0; i < len; i += 4) {
-                data[i] = Math.min(255, data[i] * 1.1 + 20);
-                data[i + 1] = Math.min(255, data[i + 1] * 0.9 + 10);
-                data[i + 2] = Math.min(255, data[i + 2] * 0.8);
-            }
-        } else if (filter === 'bright') {
-            for (let i = 0; i < len; i += 4) {
-                data[i] = Math.min(255, data[i] * 1.2);
-                data[i + 1] = Math.min(255, data[i + 1] * 1.2);
-                data[i + 2] = Math.min(255, data[i + 2] * 1.2);
-            }
-        } else if (filter === 'contrast') {
-            const f = 1.5;
-            for (let i = 0; i < len; i += 4) {
-                data[i] = Math.min(255, Math.max(0, (data[i] - 128) * f + 128));
-                data[i + 1] = Math.min(255, Math.max(0, (data[i + 1] - 128) * f + 128));
-                data[i + 2] = Math.min(255, Math.max(0, (data[i + 2] - 128) * f + 128));
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-    }
-
-    // Unsharp Mask — ملایم و حرفه‌ای
-    function applyUnsharpMask(ctx, w, h, amount) {
-        amount = amount || 0.5;
-        const imageData = ctx.getImageData(0, 0, w, h);
-        const data = imageData.data;
-        const copy = new Uint8ClampedArray(data);
-        for (let y = 1; y < h - 1; y++) {
-            for (let x = 1; x < w - 1; x++) {
-                for (let c = 0; c < 3; c++) {
-                    let sum = 0;
-                    for (let ky = -1; ky <= 1; ky++) {
-                        for (let kx = -1; kx <= 1; kx++) {
-                            sum += copy[((y + ky) * w + (x + kx)) * 4 + c];
-                        }
-                    }
-                    const blurred = sum / 9;
-                    const idx = (y * w + x) * 4 + c;
-                    data[idx] = Math.min(255, Math.max(0, copy[idx] + amount * (copy[idx] - blurred)));
-                }
-            }
-        }
-        ctx.putImageData(imageData, 0, 0);
-    }
-
-    function downloadDirect(blob, filename, silent) {
-        const link = document.createElement('a');
-        link.download = filename;
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(url), 10000);
-        if (!silent) updateStatusMessage(`⬇️ دانلود ${filename} شروع شد.`, 'success');
-    }
-
-    // ===== FIXED processSingleItem =====
-    function processSingleItem(item) {
-        return new Promise((resolve) => {
-            if (!item.originalData) { item.status = 'error'; resolve(); return; }
-
-            item.status = 'processing';
-            renderGallery();
-
-            const img = item.originalData.img;
-            const targetSize = (parseInt(targetSizeKB.value) || 70) * 1024;
-            const crop = cropMode.value;
-            const format = outputFormat.value;
-            const filter = filterMode.value;
-            const upscale = upscaleMode.value;
-
-            // ابعاد پایه
-            const baseDim = (targetDimension.value === 'original')
-                ? Math.max(img.width, img.height)
-                : (parseInt(targetDimension.value) || 800);
-
-            // ضریب بزرگ‌نمایی (فقط اگر انتخاب شده)
-            const upscaleFactor = upscale === '2x' ? 2 : upscale === '4x' ? 4 : 1;
-
-            // ناحیه برش
-            const ratio = getAspectRatio(crop);
-            let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
-            if (ratio !== null) {
-                if (img.width / img.height > ratio) {
-                    cropW = img.height * ratio;
-                    cropX = (img.width - cropW) / 2;
-                } else {
-                    cropH = img.width / ratio;
-                    cropY = (img.height - cropH) / 2;
-                }
-            }
-
-            // ابعاد خروجی با حفظ نسبت
-            const MAX_DIM = 4096;
-            let outW, outH;
-            const effectiveRatio = ratio !== null ? ratio : (cropW / cropH);
-
-            if (ratio === null) {
-                let cap = baseDim * upscaleFactor;
-                cap = Math.min(cap, MAX_DIM);
-                if (upscaleFactor === 1) cap = Math.min(cap, Math.max(cropW, cropH));
-                const scale = Math.min(1, cap / Math.max(cropW, cropH));
-                outW = Math.max(1, Math.round(cropW * scale));
-                outH = Math.max(1, Math.round(cropH * scale));
-            } else {
-                let long = baseDim * upscaleFactor;
-                long = Math.min(long, MAX_DIM);
-                if (upscaleFactor === 1) long = Math.min(long, Math.max(cropW, cropH));
-                if (effectiveRatio >= 1) {
-                    outW = long;
-                    outH = Math.max(1, Math.round(long / effectiveRatio));
-                } else {
-                    outH = long;
-                    outW = Math.max(1, Math.round(long * effectiveRatio));
-                }
-            }
-
-            // رسم روی کانواس
-            const canvas = document.createElement('canvas');
-            canvas.width = outW;
-            canvas.height = outH;
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
-
-            // فیلتر
-            if (filter === 'sharpen') {
-                applyUnsharpMask(ctx, outW, outH, 0.5);
-            } else if (filter !== 'none') {
-                const imageData = ctx.getImageData(0, 0, outW, outH);
-                applyFilter(ctx, outW, outH, filter, imageData);
-            }
-
-            // خروجی با جستجوی کیفیت درست (نزولی — هرگز افزایشی!)
-            function tryExport(q) {
-                return new Promise((res) => {
-                    if (format === 'image/png') canvas.toBlob(res, 'image/png');
-                    else canvas.toBlob(res, format, q);
-                });
-            }
-
-            (async function adjust() {
-                let bestBlob = null;
-                let bestQ = null;
-
-                if (format === 'image/png') {
-                    bestBlob = await tryExport(1);
-                    if (bestBlob && bestBlob.size > targetSize) {
-                        updateStatusMessage(
-                            `⚠️ PNG قابل کاهش به ${formatBytes(targetSize)} نیست (${formatBytes(bestBlob.size)}). از JPEG/WebP استفاده کن.`,
-                            'warning'
-                        );
-                    }
-                } else {
-                    // از کیفیت بالا به پایین
-                    for (let q = 0.92; q >= 0.30; q -= 0.04) {
-                        const blob = await tryExport(q);
-                        if (blob && blob.size <= targetSize) {
-                            bestBlob = blob;
-                            bestQ = q;
-                            break;
-                        }
-                    }
-                    if (!bestBlob) {
-                        // حتی در 0.30 نشد → پایین‌ترین ممکن
-                        bestBlob = await tryExport(0.30);
-                        bestQ = 0.30;
-                        if (bestBlob) {
-                            updateStatusMessage(
-                                `⚠️ هدف ${formatBytes(targetSize)} دست نیافت. کمترین ممکن: ${formatBytes(bestBlob.size)}`,
-                                'warning'
-                            );
-                        }
-                    }
-                }
-
-                if (bestBlob) {
-                    item.processedBlob = bestBlob;
-                    item.processedDim = `${outW}×${outH}`;
-                    item.qualityUsed = bestQ;
-                    item.status = upscale !== 'none' ? 'upscaled' : 'done';
-                    const reduction = ((item.file.size - bestBlob.size) / item.file.size * 100).toFixed(1);
-                    const dimText = `${outW}×${outH}`;
-                    updateStatusMessage(
-                        `✅ ${item.file.name} → ${formatBytes(bestBlob.size)} (${dimText} | کیفیت ${Math.round((bestQ || 1) * 100)}% | کاهش ${reduction}%)`,
-                        'success'
-                    );
-                } else {
-                    item.status = 'error';
-                    updateStatusMessage(`❌ پردازش ${item.file.name} ناموفق بود`, 'error');
-                }
-
-                updateProgress();
-                renderGallery();
-                updateStats();
-                resolve();
-            })();
+    const id = ++state.idCounter;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const base = f.name.replace(/\.[^.]+$/, '') || 'mahnaz';
+        state.files.push({
+          id,
+          file: f,
+          customName: base,
+          originalData: { src: e.target.result, img, w: img.width, h: img.height },
+          processedBlob: null,
+          processedW: 0, processedH: 0, qualityUsed: 0,
+          status: 'pending',
+          edits: { brightness: 100, contrast: 100, saturation: 100, rotation: 0, flipH: false, flipV: false, watermark: '' }
         });
+        render();
+      };
+      img.onerror = () => toast('خطا در باز کردن ' + f.name, 'error');
+      img.src = e.target.result;
+    };
+    reader.onerror = () => toast('خطا در خوندن ' + f.name, 'error');
+    reader.readAsDataURL(f);
+    added++;
+  }
+  if(added) toast(added + ' عکس اضافه شد', 'success');
+  else if(files.length) toast('عکسی اضافه نشد', 'warning');
+}
+
+// ============ Edit Image (apply edits to canvas) ============
+function buildEditedCanvas(item){
+  const img = item.originalData.img;
+  const e = item.edits || {};
+  const rot = e.rotation || 0;
+  const isRotated = rot === 90 || rot === 270;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = isRotated ? img.height : img.width;
+  canvas.height = isRotated ? img.width : img.height;
+  const ctx = canvas.getContext('2d');
+
+  let f = '';
+  if(e.brightness && e.brightness !== 100) f += 'brightness(' + e.brightness + '%) ';
+  if(e.contrast && e.contrast !== 100) f += 'contrast(' + e.contrast + '%) ';
+  if(e.saturation && e.saturation !== 100) f += 'saturate(' + e.saturation + '%) ';
+  if(f) ctx.filter = f.trim();
+
+  ctx.translate(canvas.width/2, canvas.height/2);
+  if(rot) ctx.rotate(rot * Math.PI / 180);
+  if(e.flipH) ctx.scale(-1, 1);
+  if(e.flipV) ctx.scale(1, -1);
+  ctx.drawImage(img, -img.width/2, -img.height/2);
+  ctx.filter = 'none';
+
+  if(e.watermark && e.watermark.trim()){
+    const fs = Math.max(16, Math.round(canvas.width * 0.035));
+    ctx.font = 'bold ' + fs + 'px Vazirmatn, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    const txt = e.watermark.trim();
+    const pad = Math.round(fs * 0.8);
+    ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+    ctx.lineWidth = Math.max(2, fs * 0.08);
+    ctx.strokeText(txt, canvas.width - pad, canvas.height - pad);
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.fillText(txt, canvas.width - pad, canvas.height - pad);
+  }
+
+  return canvas;
+}
+
+// ============ Process ============
+function processOne(item){
+  return new Promise((resolve) => {
+    if(!item.originalData){ item.status = 'error'; resolve(); return; }
+    item.status = 'processing';
+    render();
+
+    const srcCanvas = buildEditedCanvas(item);
+    const srcW = srcCanvas.width;
+    const srcH = srcCanvas.height;
+
+    const targetBytes = (parseInt(targetSize.value) || 70) * 1024;
+    const ratio = getRatio(cropRatio.value);
+    const fmt = formatEl.value;
+    const up = upscale.value;
+
+    // Crop rect (centered)
+    let cx = 0, cy = 0, cw = srcW, ch = srcH;
+    if(ratio !== null){
+      if(srcW / srcH > ratio){ cw = srcH * ratio; cx = (srcW - cw) / 2; }
+      else { ch = srcW / ratio; cy = (srcH - ch) / 2; }
     }
 
-    async function processAll() {
-        if (isProcessing) return;
-        if (filesList.length === 0) {
-            updateStatusMessage('⚠️ ابتدا حداقل یک عکس آپلود کنید.', 'error');
-            return;
+    // Output dims
+    const MAX_DIM = 4096;
+    const baseDim = targetDim.value === 'original'
+      ? Math.max(cw, ch)
+      : (parseInt(targetDim.value) || 800);
+    const uf = up === '2x' ? 2 : up === '4x' ? 4 : 1;
+
+    let outW, outH;
+    const effRatio = ratio !== null ? ratio : (cw / ch);
+    if(ratio === null){
+      let cap = Math.min(baseDim * uf, MAX_DIM);
+      if(uf === 1) cap = Math.min(cap, Math.max(cw, ch));
+      const sc = Math.min(1, cap / Math.max(cw, ch));
+      outW = Math.max(1, Math.round(cw * sc));
+      outH = Math.max(1, Math.round(ch * sc));
+    } else {
+      let long = Math.min(baseDim * uf, MAX_DIM);
+      if(uf === 1) long = Math.min(long, Math.max(cw, ch));
+      if(effRatio >= 1){ outW = long; outH = Math.max(1, Math.round(long / effRatio)); }
+      else { outH = long; outW = Math.max(1, Math.round(long * effRatio)); }
+    }
+
+    const out = document.createElement('canvas');
+    out.width = outW; out.height = outH;
+    const ctx = out.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(srcCanvas, cx, cy, cw, ch, 0, 0, outW, outH);
+
+    function tryExport(q){
+      return new Promise(res => {
+        if(fmt === 'image/png') out.toBlob(res, 'image/png');
+        else out.toBlob(res, fmt, q);
+      });
+    }
+
+    (async () => {
+      let best = null, bestQ = 0;
+
+      if(fmt === 'image/png'){
+        best = await tryExport(1);
+        if(best && best.size > targetBytes){
+          toast('PNG قابل کاهش نیست — از JPEG یا WebP استفاده کن', 'warning');
         }
-
-        isProcessing = true;
-        processAllBtn.disabled = true;
-        updateProgress();
-
-        const pendingItems = filesList.filter(f => f.status !== 'done' && f.status !== 'upscaled');
-        if (pendingItems.length === 0) {
-            updateStatusMessage('ℹ️ همه عکس‌ها قبلاً پردازش شده‌اند.', 'warning');
-            isProcessing = false;
-            processAllBtn.disabled = false;
-            return;
+      } else {
+        // Search from high to low quality
+        for(let q = 0.92; q >= 0.30; q -= 0.04){
+          const blob = await tryExport(q);
+          if(blob && blob.size <= targetBytes){ best = blob; bestQ = q; break; }
         }
-
-        updateStatusMessage(`⏳ در حال پردازش ${pendingItems.length} عکس...`);
-
-        const batchSize = 2;
-        for (let i = 0; i < pendingItems.length; i += batchSize) {
-            const batch = pendingItems.slice(i, i + batchSize);
-            await Promise.all(batch.map(item => processSingleItem(item)));
-            updateProgress();
+        if(!best){
+          best = await tryExport(0.30);
+          bestQ = 0.30;
+          if(best) toast('هدف حجمی دست نیافت — کمترین ممکن: ' + fmtBytes(best.size), 'warning');
         }
+      }
 
-        isProcessing = false;
-        processAllBtn.disabled = false;
-        const doneCount = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
-        updateStatusMessage(`✅ ${doneCount} عکس با موفقیت پردازش شد.`, 'success');
-        renderGallery();
+      if(best){
+        item.processedBlob = best;
+        item.processedW = outW;
+        item.processedH = outH;
+        item.qualityUsed = Math.round(bestQ * 100);
+        item.status = up !== 'none' ? 'upscaled' : 'done';
+      } else {
+        item.status = 'error';
+      }
 
-        if (doneCount > 0) {
-            setTimeout(showSummary, 600);
-        }
-    }
-
-    // ===== UI =====
-    function updateProgress() {
-        const total = filesList.length || 1;
-        const done = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
-        progressFill.style.width = (done / total * 100) + '%';
-    }
-
-    function renderGallery() {
-        galleryGrid.innerHTML = '';
-        filesList.forEach((item) => {
-            const card = document.createElement('div');
-            card.className = 'image-card';
-
-            let statusText = 'در انتظار';
-            let statusClass = '';
-            if (item.status === 'done') { statusText = '✅ پردازش‌شده'; statusClass = 'done'; }
-            else if (item.status === 'upscaled') { statusText = '🔍 بزرگ‌شده'; statusClass = 'upscaled'; }
-            else if (item.status === 'processing') { statusText = '⏳ در حال پردازش'; statusClass = 'processing'; }
-            else if (item.status === 'error') { statusText = '❌ خطا'; statusClass = 'error'; }
-
-            const src = item.originalData?.src || '';
-            const name = item.customName || item.file?.name || 'عکس';
-            const size = item.file ? formatBytes(item.file.size) : '—';
-            const outputSize = item.processedBlob ? formatBytes(item.processedBlob.size) : '—';
-            const outputDim = item.processedDim || '—';
-
-            card.innerHTML = `
-                <div class="img-wrap">
-                    <img src="${src}" alt="${name}" loading="lazy">
-                </div>
-                <div class="card-footer">
-                    <input class="file-name-input" type="text" value="${name}" data-id="${item.id}" placeholder="نام عکس">
-                    <div class="file-meta">
-                        <span class="file-size">${size}</span>
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                    </div>
-                    ${item.processedBlob ? `<div style="font-size:0.55rem; opacity:0.7; padding:2px 8px; border-radius:40px; border:1px solid var(--glass-border); text-align:center;">${outputSize} | ${outputDim}</div>` : ''}
-                </div>
-                <div class="btn-group">
-                    ${item.processedBlob ? `<button class="btn-sm compare-btn" data-id="${item.id}">⚖️</button>` : ''}
-                    ${item.processedBlob ? `<button class="btn-sm download" data-id="${item.id}">⬇️</button>` : ''}
-                    ${item.originalData && item.status !== 'processing' ? `<button class="btn-sm upscale-btn" data-id="${item.id}">🔍</button>` : ''}
-                    <button class="btn-sm remove" data-id="${item.id}">✕</button>
-                </div>
-            `;
-            galleryGrid.appendChild(card);
-
-            const nameInput = card.querySelector('.file-name-input');
-            nameInput.addEventListener('input', function() {
-                const id = parseInt(this.dataset.id);
-                const target = filesList.find(f => f.id === id);
-                if (target) target.customName = this.value;
-            });
-
-            card.querySelector('.btn-sm.compare-btn')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openCompare(parseInt(this.dataset.id));
-            });
-
-            card.querySelector('.btn-sm.download')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                downloadSingle(parseInt(this.dataset.id));
-            });
-
-            card.querySelector('.btn-sm.upscale-btn')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const id = parseInt(this.dataset.id);
-                const item = filesList.find(f => f.id === id);
-                if (item) {
-                    upscaleMode.value = '2x';
-                    processSingleItem(item);
-                }
-            });
-
-            card.querySelector('.btn-sm.remove')?.addEventListener('click', function(e) {
-                e.stopPropagation();
-                removeFile(parseInt(this.dataset.id));
-            });
-        });
-        updateStats();
-    }
-
-    function updateStats() {
-        totalCount.textContent = filesList.length;
-        const totalBytes = filesList.reduce((sum, item) => sum + (item.file ? item.file.size : 0), 0);
-        totalSize.textContent = formatBytes(totalBytes);
-        const done = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
-        processedCount.textContent = done;
-
-        let totalBefore = 0, totalAfter = 0;
-        filesList.forEach(f => {
-            if (f.processedBlob) {
-                totalBefore += f.file.size;
-                totalAfter += f.processedBlob.size;
-            }
-        });
-        reductionPercent.textContent = totalBefore > 0 ? ((1 - totalAfter / totalBefore) * 100).toFixed(1) + '%' : '0%';
-
-        processAllBtn.disabled = filesList.length === 0 || isProcessing;
-        const hasDone = done > 0;
-        downloadAllBtn.disabled = !hasDone || isProcessing;
-        zipBtn.disabled = !hasDone || isProcessing;
-        summaryBtn.disabled = !hasDone;
-        updateProgress();
-    }
-
-    function removeFile(id) {
-        const index = filesList.findIndex(f => f.id === id);
-        if (index !== -1) {
-            filesList.splice(index, 1);
-            renderGallery();
-            updateStatusMessage('🗑️ عکس حذف شد');
-        }
-    }
-
-    function updateStatusMessage(msg, type) {
-        statusMessage.textContent = msg;
-        statusMessage.className = 'status-msg';
-        if (type) statusMessage.classList.add(type);
-    }
-
-    function downloadSingle(id) {
-        const item = filesList.find(f => f.id === id);
-        if (!item || !item.processedBlob) return;
-        const customName = (item.customName?.trim() || item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz')
-            .replace(/[<>:"/\\|?*]/g, '_');
-        const ext = outputFormat.value.split('/')[1] || 'jpg';
-        downloadDirect(item.processedBlob, `${customName}.${ext}`);
-    }
-
-    function downloadAll() {
-        const doneItems = filesList.filter(f => (f.status === 'done' || f.status === 'upscaled') && f.processedBlob);
-        if (doneItems.length === 0) {
-            updateStatusMessage('⚠️ هیچ عکس پردازش‌شده‌ای وجود ندارد.', 'error');
-            return;
-        }
-        doneItems.forEach((item, idx) => {
-            setTimeout(() => {
-                const customName = (item.customName?.trim() || 'mahnaz_' + (idx + 1))
-                    .replace(/[<>:"/\\|?*]/g, '_');
-                const ext = outputFormat.value.split('/')[1] || 'jpg';
-                downloadDirect(item.processedBlob, `${customName}.${ext}`, true);
-            }, idx * 400);
-        });
-        updateStatusMessage(`⬇️ دانلود ${doneItems.length} عکس شروع شد.`, 'success');
-    }
-
-    async function downloadZip() {
-        if (typeof JSZip === 'undefined') {
-            updateStatusMessage('⚠️ کتابخانه ZIP بارگذاری نشد. اتصال اینترنت را بررسی کن.', 'error');
-            return;
-        }
-        const doneItems = filesList.filter(f => f.processedBlob);
-        if (doneItems.length === 0) {
-            updateStatusMessage('⚠️ هیچ عکس پردازش‌شده‌ای برای ZIP وجود ندارد.', 'error');
-            return;
-        }
-
-        updateStatusMessage(`📦 در حال ساخت ZIP (${doneItems.length} عکس)...`);
-        zipBtn.disabled = true;
-
-        try {
-            const zip = new JSZip();
-            const ext = outputFormat.value.split('/')[1] || 'jpg';
-            const usedNames = new Set();
-
-            doneItems.forEach((item, i) => {
-                let base = (item.customName?.trim() || `mahnaz_${i + 1}`).replace(/[<>:"/\\|?*]/g, '_');
-                if (!base) base = `mahnaz_${i + 1}`;
-                let name = `${base}.${ext}`;
-                let counter = 1;
-                while (usedNames.has(name)) {
-                    name = `${base}_${counter++}.${ext}`;
-                }
-                usedNames.add(name);
-                zip.file(name, item.processedBlob);
-            });
-
-            const blob = await zip.generateAsync(
-                { type: 'blob', compression: 'STORE' },
-                (meta) => {
-                    progressFill.style.width = meta.percent + '%';
-                }
-            );
-
-            downloadDirect(blob, `mahnaz-images-${Date.now()}.zip`, true);
-            updateStatusMessage(`✅ فایل ZIP آماده شد (${formatBytes(blob.size)}) — دانلود شروع شد.`, 'success');
-        } catch (e) {
-            console.error(e);
-            updateStatusMessage('❌ خطا در ساخت ZIP', 'error');
-        } finally {
-            zipBtn.disabled = false;
-            updateProgress();
-        }
-    }
-
-    function showSummary() {
-        const done = filesList.filter(f => f.processedBlob);
-        if (done.length === 0) {
-            updateStatusMessage('⚠️ هنوز عکسی پردازش نشده است.', 'warning');
-            return;
-        }
-
-        let totalBefore = 0, totalAfter = 0;
-        done.forEach(f => {
-            totalBefore += f.file.size;
-            totalAfter += f.processedBlob.size;
-        });
-        const reduction = totalBefore > 0 ? ((1 - totalAfter / totalBefore) * 100).toFixed(1) : '0';
-        const avgSize = totalAfter / done.length;
-
-        document.getElementById('summaryContent').innerHTML = `
-            <div class="summary-grid">
-                <div class="summary-stat">
-                    <div class="summary-value">${done.length}</div>
-                    <div class="summary-label">عکس پردازش شد</div>
-                </div>
-                <div class="summary-stat">
-                    <div class="summary-value">${formatBytes(totalBefore)}</div>
-                    <div class="summary-label">حجم قبل</div>
-                </div>
-                <div class="summary-stat highlight">
-                    <div class="summary-value">${formatBytes(totalAfter)}</div>
-                    <div class="summary-label">حجم بعد</div>
-                </div>
-                <div class="summary-stat success">
-                    <div class="summary-value">${reduction}%</div>
-                    <div class="summary-label">کاهش حجم</div>
-                </div>
-                <div class="summary-stat">
-                    <div class="summary-value">${formatBytes(avgSize)}</div>
-                    <div class="summary-label">میانگین هر عکس</div>
-                </div>
-                <div class="summary-stat">
-                    <div class="summary-value">${filesList.length}</div>
-                    <div class="summary-label">کل عکس‌ها</div>
-                </div>
-            </div>
-            <div class="summary-msg">
-                🎉 آفرین مهناز جون! ${done.length} عکس با موفقیت فشرده شد و ${reduction}% صرفه‌جویی در حجم داشتی. ✨
-            </div>
-        `;
-        document.getElementById('summaryModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    // ===== Compare =====
-    function setComparePos(pct) {
-        pct = Math.max(2, Math.min(98, pct));
-        document.getElementById('compareContainer').style.setProperty('--pos', pct + '%');
-    }
-
-    function openCompare(id) {
-        const item = filesList.find(f => f.id === id);
-        if (!item || !item.processedBlob) return;
-
-        if (compareObjectUrl) URL.revokeObjectURL(compareObjectUrl);
-        compareObjectUrl = URL.createObjectURL(item.processedBlob);
-
-        const container = document.getElementById('compareContainer');
-        const beforeImg = document.getElementById('compareBefore');
-        const afterImg = document.getElementById('compareAfter');
-
-        beforeImg.src = item.originalData.src;
-        afterImg.src = compareObjectUrl;
-
-        if (item.processedDim && item.processedDim !== '—') {
-            const parts = item.processedDim.split('×');
-            if (parts.length === 2) {
-                container.style.aspectRatio = `${parts[0]} / ${parts[1]}`;
-            }
-        } else {
-            container.style.aspectRatio = '1 / 1';
-        }
-
-        const reduction = ((item.file.size - item.processedBlob.size) / item.file.size * 100).toFixed(1);
-        document.getElementById('compareInfo').innerHTML = `
-            <span>📷 قبل: ${formatBytes(item.file.size)}</span>
-            <span>✨ بعد: ${formatBytes(item.processedBlob.size)}</span>
-            <span>📊 کاهش: ${reduction}%</span>
-            <span>📐 ${item.processedDim || '—'}</span>
-        `;
-
-        setComparePos(50);
-        document.getElementById('compareModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeCompare() {
-        document.getElementById('compareModal').classList.remove('active');
-        document.body.style.overflow = '';
-        if (compareObjectUrl) {
-            URL.revokeObjectURL(compareObjectUrl);
-            compareObjectUrl = null;
-        }
-    }
-
-    function closeSummary() {
-        document.getElementById('summaryModal').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Compare drag
-    (function initCompareSlider() {
-        const container = document.getElementById('compareContainer');
-        let dragging = false;
-
-        function updatePos(e) {
-            const rect = container.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const x = clientX - rect.left;
-            const pct = (x / rect.width) * 100;
-            setComparePos(pct);
-        }
-
-        container.addEventListener('mousedown', (e) => { dragging = true; updatePos(e); e.preventDefault(); });
-        container.addEventListener('touchstart', (e) => { dragging = true; updatePos(e); }, { passive: true });
-        window.addEventListener('mousemove', (e) => { if (dragging) updatePos(e); });
-        window.addEventListener('touchmove', (e) => { if (dragging) updatePos(e); }, { passive: true });
-        window.addEventListener('mouseup', () => { dragging = false; });
-        window.addEventListener('touchend', () => { dragging = false; });
+      render();
+      resolve();
     })();
+  });
+}
 
-    // ===== Add Files =====
-    function addFiles(files) {
-        let added = 0;
-        for (const f of files) {
-            if (!f.type.startsWith('image/')) continue;
-            if (f.size > 25 * 1024 * 1024) {
-                updateStatusMessage(`⚠️ ${f.name} بزرگتر از ۲۵ مگابایت است.`, 'error');
-                continue;
-            }
-            const exists = filesList.some(item => item.file.name === f.name && item.file.size === f.size);
-            if (exists) continue;
+async function processAll(){
+  if(state.isProcessing) return;
+  const pending = state.files.filter(f => f.status !== 'done' && f.status !== 'upscaled' && f.status !== 'processing');
+  if(!pending.length){
+    toast(state.files.length ? 'همه عکس‌ها پردازش شدن' : 'اول عکس اضافه کن', 'warning');
+    return;
+  }
 
-            const id = ++idCounter;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const baseName = f.name.replace(/\.[^.]+$/, '');
-                    filesList.push({
-                        id, file: f, customName: baseName,
-                        originalData: {
-                            src: e.target.result, img,
-                            width: img.width, height: img.height
-                        },
-                        processedBlob: null, processedDim: null,
-                        status: 'pending', name: f.name, size: f.size
-                    });
-                    renderGallery();
-                    updateStatusMessage(`✅ ${f.name} اضافه شد (${filesList.length} عکس)`, 'success');
-                };
-                img.onerror = function() {
-                    updateStatusMessage(`❌ خطا در بارگذاری ${f.name}`, 'error');
-                };
-                img.src = e.target.result;
-            };
-            reader.onerror = function() {
-                updateStatusMessage(`❌ خطا در خواندن ${f.name}`, 'error');
-            };
-            reader.readAsDataURL(f);
-            added++;
-        }
-        if (added === 0 && files.length > 0) {
-            updateStatusMessage('⚠️ هیچ عکس معتبری اضافه نشد.', 'error');
-        }
+  state.isProcessing = true;
+  toast('در حال پردازش ' + pending.length + ' عکس...', 'info');
+
+  const batch = 2;
+  for(let i = 0; i < pending.length; i += batch){
+    await Promise.all(pending.slice(i, i + batch).map(processOne));
+  }
+
+  state.isProcessing = false;
+  const done = state.files.filter(f => f.status === 'done' || f.status === 'upscaled').length;
+  toast(done + ' عکس آماده شد!', 'success');
+  confetti();
+  const enc = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+  setTimeout(() => toast(enc, 'success'), 500);
+  render();
+}
+
+// ============ Render ============
+function render(){
+  // Filter + sort
+  let items = state.files.slice();
+  if(state.searchQuery){
+    const q = state.searchQuery.toLowerCase();
+    items = items.filter(f => (f.customName || f.file.name).toLowerCase().includes(q));
+  }
+  const sortMap = { name: 'customName', size: 'size', status: 'status' };
+  const key = sortMap[state.sortBy] || 'customName';
+  items.sort((a, b) => {
+    if(state.sortBy === 'size') return (a.file.size || 0) - (b.file.size || 0);
+    return String(a[key] || '').localeCompare(String(b[key] || ''), 'fa');
+  });
+
+  // Gallery
+  gallery.innerHTML = '';
+  if(items.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = state.files.length
+      ? '<div class="empty-icon">🔍</div><div class="empty-title">چیزی پیدا نشد</div><div class="empty-text">عبارت جستجو رو تغییر بده</div>'
+      : '<div class="empty-icon">🖼️</div><div class="empty-title">گالری خالیه</div><div class="empty-text">اولین عکست رو آپلود کن تا شروع کنیم</div>';
+    gallery.appendChild(empty);
+  } else {
+    items.forEach((item, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      if(state.selectedIds.has(item.id)) card.classList.add('selected');
+      card.style.animationDelay = Math.min(idx * 30, 300) + 'ms';
+      card.dataset.id = item.id;
+
+      let statusText = 'در انتظار', statusCls = 'pending';
+      if(item.status === 'done'){ statusText = 'آماده'; statusCls = 'done'; }
+      else if(item.status === 'upscaled'){ statusText = 'بزرگ‌شده'; statusCls = 'upscaled'; }
+      else if(item.status === 'processing'){ statusText = 'در حال...'; statusCls = 'processing'; }
+      else if(item.status === 'error'){ statusText = 'خطا'; statusCls = 'error'; }
+
+      const sizeInfo = item.processedBlob
+        ? '<span class="card-size">' + fmtBytes(item.file.size) + '<span class="arrow">→</span><span class="after">' + fmtBytes(item.processedBlob.size) + '</span></span>'
+        : '<span class="card-size">' + fmtBytes(item.file.size) + '</span>';
+
+      const dimInfo = item.processedBlob
+        ? '<div style="font-size:0.6rem;color:var(--text-muted);font-weight:600;text-align:center;padding:2px 0">' + item.processedW + '×' + item.processedH + (item.qualityUsed ? ' · Q' + item.qualityUsed + '%' : '') + '</div>'
+        : '';
+
+      card.innerHTML =
+        '<div class="card-img">' +
+          '<img src="' + item.originalData.src + '" alt="' + escapeHtml(item.customName) + '" loading="lazy">' +
+          '<div class="card-overlay"></div>' +
+          '<div class="card-select" data-select="' + item.id + '"></div>' +
+          '<div class="card-badge">' + statusText + '</div>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<input class="card-name" value="' + escapeHtml(item.customName) + '" data-name="' + item.id + '" placeholder="نام عکس">' +
+          '<div class="card-meta">' + sizeInfo + '<span class="badge ' + statusCls + '">' + statusText + '</span></div>' +
+          dimInfo +
+          '<div class="card-actions">' +
+            '<button data-act="edit" data-id="' + item.id + '" title="ویرایش">🎨</button>' +
+            (item.processedBlob ? '<button data-act="compare" data-id="' + item.id + '" title="مقایسه">⚖️</button>' : '') +
+            (item.processedBlob ? '<button data-act="copy" data-id="' + item.id + '" title="کپی به کلیپ‌بورد">📋</button>' : '') +
+            (item.processedBlob ? '<button data-act="download" data-id="' + item.id + '" title="دانلود">⬇️</button>' : '') +
+            '<button data-act="remove" data-id="' + item.id + '" title="حذف" class="danger">✕</button>' +
+          '</div>' +
+        '</div>';
+
+      gallery.appendChild(card);
+    });
+  }
+
+  // Stats
+  const total = state.files.length;
+  const bytes = state.files.reduce((s, f) => s + (f.file ? f.file.size : 0), 0);
+  const done = state.files.filter(f => f.status === 'done' || f.status === 'upscaled').length;
+  let before = 0, after = 0;
+  state.files.forEach(f => { if(f.processedBlob){ before += f.file.size; after += f.processedBlob.size; } });
+  const reduction = before > 0 ? ((1 - after/before) * 100).toFixed(1) : '0';
+
+  $('statCount').textContent = total;
+  $('statSize').textContent = fmtBytes(bytes);
+  $('statDone').textContent = done;
+  $('statReduction').textContent = reduction + '%';
+  $('progressFill').style.width = (total ? done/total*100 : 0) + '%';
+
+  // Buttons
+  $('processBtn').disabled = total === 0 || state.isProcessing;
+  $('zipBtn').disabled = done === 0 || state.isProcessing;
+  $('summaryBtn').disabled = done === 0;
+  $('undoBtn').disabled = state.history.length === 0;
+
+  // Selection
+  $('selCount').textContent = state.selectedIds.size;
+  $('selCount').classList.toggle('hidden', state.selectedIds.size === 0);
+  $('selectAllBtn').classList.toggle('active', state.selectedIds.size > 0 && state.selectedIds.size === items.length);
+}
+
+// ============ Gallery Events (delegated) ============
+gallery.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-act]');
+  if(btn){
+    e.stopPropagation();
+    const id = parseInt(btn.dataset.id);
+    const act = btn.dataset.act;
+    if(act === 'edit') openEdit(id);
+    else if(act === 'compare') openCompare(id);
+    else if(act === 'copy') copyToClipboard(id);
+    else if(act === 'download') downloadOne(id);
+    else if(act === 'remove') removeFile(id);
+    return;
+  }
+
+  const sel = e.target.closest('[data-select]');
+  if(sel){
+    e.stopPropagation();
+    toggleSelect(parseInt(sel.dataset.select));
+    return;
+  }
+
+  const nameInput = e.target.closest('[data-name]');
+  if(nameInput) return;
+
+  const card = e.target.closest('.card');
+  if(card && (e.ctrlKey || e.metaKey)){
+    toggleSelect(parseInt(card.dataset.id));
+  }
+});
+
+gallery.addEventListener('input', (e) => {
+  const inp = e.target.closest('[data-name]');
+  if(inp){
+    const id = parseInt(inp.dataset.name);
+    const item = state.files.find(f => f.id === id);
+    if(item) item.customName = inp.value;
+  }
+});
+
+function toggleSelect(id){
+  if(state.selectedIds.has(id)) state.selectedIds.delete(id);
+  else state.selectedIds.add(id);
+  render();
+}
+
+function removeFile(id){
+  const item = state.files.find(f => f.id === id);
+  if(!item) return;
+  state.history.push({ type: 'remove', item });
+  state.files = state.files.filter(f => f.id !== id);
+  state.selectedIds.delete(id);
+  render();
+  toast('عکس حذف شد — Ctrl+Z برای بازگردانی', 'info');
+}
+
+function undo(){
+  if(!state.history.length) return;
+  const action = state.history.pop();
+  if(action.type === 'remove'){
+    state.files.push(action.item);
+    render();
+    toast('عکس بازگردانده شد', 'success');
+  }
+}
+
+// ============ Edit Modal ============
+function openEdit(id){
+  const item = state.files.find(f => f.id === id);
+  if(!item) return;
+  state.editingId = id;
+  state.editState = { ...item.edits };
+
+  $('editPreview').src = item.originalData.src;
+  $('editBrightness').value = state.editState.brightness || 100;
+  $('editContrast').value = state.editState.contrast || 100;
+  $('editSaturation').value = state.editState.saturation || 100;
+  $('editRotation').value = String(state.editState.rotation || 0);
+  $('editWatermark').value = state.editState.watermark || '';
+
+  updateEditLabels();
+  $('editModal').classList.add('open');
+}
+
+function updateEditLabels(){
+  $('editBrightnessVal').textContent = $('editBrightness').value + '%';
+  $('editContrastVal').textContent = $('editContrast').value + '%';
+  $('editSaturationVal').textContent = $('editSaturation').value + '%';
+}
+
+['editBrightness','editContrast','editSaturation'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    state.editState.brightness = parseInt($('editBrightness').value);
+    state.editState.contrast = parseInt($('editContrast').value);
+    state.editState.saturation = parseInt($('editSaturation').value);
+    updateEditLabels();
+    updateEditPreview();
+  });
+});
+
+function updateEditPreview(){
+  const item = state.files.find(f => f.id === state.editingId);
+  if(!item) return;
+  const tmp = { ...item, edits: state.editState };
+  const canvas = buildEditedCanvas(tmp);
+  $('editPreview').src = canvas.toDataURL('image/jpeg', 0.8);
+}
+
+$('editRotation').addEventListener('change', () => {
+  state.editState.rotation = parseInt($('editRotation').value);
+  updateEditPreview();
+});
+
+$('flipH').addEventListener('click', () => {
+  state.editState.flipH = !state.editState.flipH;
+  $('flipH').classList.toggle('active', state.editState.flipH);
+  updateEditPreview();
+});
+
+$('flipV').addEventListener('click', () => {
+  state.editState.flipV = !state.editState.flipV;
+  $('flipV').classList.toggle('active', state.editState.flipV);
+  updateEditPreview();
+});
+
+$('editWatermark').addEventListener('input', () => {
+  state.editState.watermark = $('editWatermark').value;
+  updateEditPreview();
+});
+
+$('editReset').addEventListener('click', () => {
+  state.editState = { brightness: 100, contrast: 100, saturation: 100, rotation: 0, flipH: false, flipV: false, watermark: '' };
+  openEdit(state.editingId);
+});
+
+$('editApply').addEventListener('click', () => {
+  const item = state.files.find(f => f.id === state.editingId);
+  if(item){
+    item.edits = { ...state.editState };
+    item.processedBlob = null;
+    item.status = 'pending';
+    render();
+    toast('تغییرات ذخیره شد — دوباره پردازش کن', 'success');
+  }
+  $('editModal').classList.remove('open');
+});
+
+// ============ Compare ============
+function openCompare(id){
+  const item = state.files.find(f => f.id === id);
+  if(!item || !item.processedBlob) return;
+  if(state.compareUrl) URL.revokeObjectURL(state.compareUrl);
+  state.compareUrl = URL.createObjectURL(item.processedBlob);
+  $('compareBefore').src = item.originalData.src;
+  $('compareAfter').src = state.compareUrl;
+  $('compareBox').style.setProperty('--pos', '50%');
+  const reduction = ((item.file.size - item.processedBlob.size) / item.file.size * 100).toFixed(1);
+  $('compareInfo').innerHTML =
+    '<span>📷 قبل: ' + fmtBytes(item.file.size) + '</span>' +
+    '<span>✨ بعد: ' + fmtBytes(item.processedBlob.size) + '</span>' +
+    '<span>📉 کاهش: ' + reduction + '%</span>' +
+    '<span>📐 ' + item.processedW + '×' + item.processedH + '</span>';
+  $('compareModal').classList.add('open');
+}
+
+// Compare drag
+(function(){
+  const box = $('compareBox');
+  let dragging = false;
+  function setPos(clientX){
+    const r = box.getBoundingClientRect();
+    let pct = ((clientX - r.left) / r.width) * 100;
+    pct = Math.max(2, Math.min(98, pct));
+    box.style.setProperty('--pos', pct + '%');
+  }
+  box.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
+  box.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
+  window.addEventListener('touchmove', e => { if(dragging) setPos(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('mouseup', () => dragging = false);
+  window.addEventListener('touchend', () => dragging = false);
+})();
+
+// ============ Download ============
+function downloadOne(id){
+  const item = state.files.find(f => f.id === id);
+  if(!item || !item.processedBlob) return;
+  const name = (item.customName || 'mahnaz').replace(/[<>:"/\\|?*]/g, '_');
+  const ext = formatEl.value.split('/')[1] || 'jpg';
+  const url = URL.createObjectURL(item.processedBlob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name + '.' + ext;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  toast('دانلود شد: ' + name + '.' + ext, 'success');
+}
+
+async function copyToClipboard(id){
+  const item = state.files.find(f => f.id === id);
+  if(!item || !item.processedBlob) return;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ [item.processedBlob.type]: item.processedBlob })]);
+    toast('عکس توی کلیپ‌بورد کپی شد — همین‌جا Ctrl+V کن!', 'success');
+  } catch(err){
+    toast('کپی به کلیپ‌بورد پشتیبانی نمی‌شه', 'error');
+  }
+}
+
+async function downloadZip(){
+  if(typeof JSZip === 'undefined'){ toast('کتابخانه ZIP بارگذاری نشد', 'error'); return; }
+  const done = state.files.filter(f => f.processedBlob);
+  if(!done.length){ toast('عکسی برای ZIP آماده نیست', 'warning'); return; }
+
+  $('zipBtn').disabled = true;
+  toast('در حال ساخت ZIP...', 'info');
+
+  try {
+    const zip = new JSZip();
+    const ext = formatEl.value.split('/')[1] || 'jpg';
+    const used = new Set();
+    done.forEach((item, i) => {
+      let base = (item.customName || 'mahnaz_' + (i+1)).replace(/[<>:"/\\|?*]/g, '_');
+      let name = base + '.' + ext;
+      let c = 1;
+      while(used.has(name)) name = base + '_' + (c++) + '.' + ext;
+      used.add(name);
+      zip.file(name, item.processedBlob);
+    });
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'STORE' }, meta => {
+      $('progressFill').style.width = meta.percent + '%';
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'mahnaz-images-' + Date.now() + '.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast('ZIP آماده شد (' + fmtBytes(blob.size) + ')', 'success');
+  } catch(err){
+    toast('خطا در ساخت ZIP', 'error');
+  } finally {
+    $('zipBtn').disabled = false;
+    render();
+  }
+}
+
+// ============ Summary ============
+function openSummary(){
+  const done = state.files.filter(f => f.processedBlob);
+  if(!done.length){ toast('هنوز عکسی آماده نیست', 'warning'); return; }
+  let before = 0, after = 0;
+  done.forEach(f => { before += f.file.size; after += f.processedBlob.size; });
+  const reduction = before > 0 ? ((1 - after/before) * 100).toFixed(1) : '0';
+  const avg = Math.round(after / done.length);
+
+  $('summaryGrid').innerHTML =
+    '<div class="summary-stat"><div class="summary-value">' + done.length + '</div><div class="summary-label">📸 عکس آماده</div></div>' +
+    '<div class="summary-stat"><div class="summary-value">' + fmtBytes(before) + '</div><div class="summary-label">📦 حجم قبل</div></div>' +
+    '<div class="summary-stat highlight"><div class="summary-value">' + fmtBytes(after) + '</div><div class="summary-label">✨ حجم بعد</div></div>' +
+    '<div class="summary-stat highlight"><div class="summary-value">' + reduction + '%</div><div class="summary-label">📉 کاهش</div></div>' +
+    '<div class="summary-stat"><div class="summary-value">' + fmtBytes(avg) + '</div><div class="summary-label">📊 میانگین</div></div>' +
+    '<div class="summary-stat"><div class="summary-value">' + state.files.length + '</div><div class="summary-label">🖼️ کل عکس‌ها</div></div>';
+
+  $('summaryMessage').textContent = '🎉 آفرین مهناز جون! ' + done.length + ' عکس با موفقیت فشرده شد و ' + reduction + '% صرفه‌جویی داشتی. ✨';
+  $('summaryModal').classList.add('open');
+}
+
+// ============ Presets ============
+document.querySelectorAll('.preset').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = PRESETS[btn.dataset.p];
+    if(!p) return;
+    targetSize.value = p.size;
+    targetDim.value = p.dim;
+    cropRatio.value = p.crop;
+    formatEl.value = p.format;
+    upscale.value = p.upscale;
+    updateSizeLabel();
+    document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    toast('پریست اعمال شد: ' + btn.textContent.trim(), 'success');
+  });
+});
+
+function updateSizeLabel(){
+  const v = parseInt(targetSize.value);
+  $('sizeVal').textContent = v >= 1000 ? (v/1000).toFixed(1) + ' MB' : v + ' KB';
+}
+targetSize.addEventListener('input', updateSizeLabel);
+
+// ============ Upload ============
+fileInput.addEventListener('change', function(){
+  if(this.files && this.files.length) addFiles(this.files);
+  this.value = '';
+});
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+uploadZone.addEventListener('dragleave', e => { e.preventDefault(); uploadZone.classList.remove('drag'); });
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag');
+  if(e.dataTransfer.files && e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+});
+
+document.addEventListener('paste', e => {
+  if(!e.clipboardData) return;
+  const items = e.clipboardData.items;
+  const imgs = [];
+  for(let i = 0; i < items.length; i++){
+    if(items[i].type && items[i].type.startsWith('image/')){
+      const f = items[i].getAsFile();
+      if(f) imgs.push(f);
     }
+  }
+  if(imgs.length){ addFiles(imgs); toast(imgs.length + ' عکس از کلیپ‌بورد اضافه شد', 'success'); }
+});
 
-    // ===== Presets =====
-    const PRESETS = {
-        instagram: { size: 200, dim: '1024', crop: '1:1', format: 'image/jpeg', filter: 'none', upscale: 'none' },
-        story: { size: 150, dim: '1024', crop: '9:16', format: 'image/webp', filter: 'none', upscale: 'none' },
-        profile: { size: 70, dim: '400', crop: '1:1', format: 'image/jpeg', filter: 'none', upscale: 'none' },
-        web: { size: 100, dim: '800', crop: 'original', format: 'image/webp', filter: 'none', upscale: 'none' },
-        print: { size: 2000, dim: '2048', crop: 'original', format: 'image/jpeg', filter: 'none', upscale: 'none' }
-    };
+// ============ Toolbar ============
+searchInput.addEventListener('input', () => { state.searchQuery = searchInput.value; render(); });
+sortSelect.addEventListener('change', () => { state.sortBy = sortSelect.value; render(); });
 
-    document.querySelectorAll('.preset').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const p = PRESETS[btn.dataset.preset];
-            if (!p) return;
-            targetSizeKB.value = p.size;
-            targetDimension.value = p.dim;
-            cropMode.value = p.crop;
-            outputFormat.value = p.format;
-            filterMode.value = p.filter;
-            upscaleMode.value = p.upscale;
-            document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateStatusMessage(`✨ پریست «${btn.textContent.trim()}» اعمال شد.`, 'success');
-        });
-    });
+$('selectAllBtn').addEventListener('click', () => {
+  if(state.selectedIds.size === state.files.length){
+    state.selectedIds.clear();
+  } else {
+    state.files.forEach(f => state.selectedIds.add(f.id));
+  }
+  render();
+});
 
-    // ===== Save / Load =====
-    window.saveSettings = function() {
-        const settings = {
-            targetSize: targetSizeKB.value,
-            targetDim: targetDimension.value,
-            crop: cropMode.value,
-            format: outputFormat.value,
-            filter: filterMode.value,
-            upscale: upscaleMode.value
-        };
-        localStorage.setItem('imageForgeSettings', JSON.stringify(settings));
-        updateStatusMessage('💾 تنظیمات ذخیره شد.', 'success');
-    };
+// ============ Actions ============
+$('processBtn').addEventListener('click', processAll);
+$('zipBtn').addEventListener('click', downloadZip);
+$('summaryBtn').addEventListener('click', openSummary);
+$('undoBtn').addEventListener('click', undo);
+$('clearBtn').addEventListener('click', () => {
+  if(!state.files.length) return;
+  if(!confirm('همه عکس‌ها پاک شوند؟')) return;
+  state.files = [];
+  state.selectedIds.clear();
+  state.history = [];
+  render();
+  toast('همه پاک شد', 'info');
+});
 
-    window.loadSettings = function() {
-        const data = localStorage.getItem('imageForgeSettings');
-        if (!data) {
-            updateStatusMessage('⚠️ تنظیمات ذخیره‌شده‌ای یافت نشد.', 'warning');
-            return;
-        }
-        try {
-            const s = JSON.parse(data);
-            targetSizeKB.value = s.targetSize || 70;
-            targetDimension.value = s.targetDim || '800';
-            cropMode.value = s.crop || 'original';
-            outputFormat.value = s.format || 'image/jpeg';
-            filterMode.value = s.filter || 'none';
-            upscaleMode.value = s.upscale || 'none';
-            updateStatusMessage('📂 تنظیمات بارگذاری شد.', 'success');
-        } catch (e) {
-            updateStatusMessage('❌ خطا در بارگذاری تنظیمات.', 'error');
-        }
-    };
+// ============ Modals close ============
+document.querySelectorAll('[data-close]').forEach(b => {
+  b.addEventListener('click', () => $(b.dataset.close).classList.remove('open'));
+});
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
 
-    // ===== Events =====
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files.length > 0) addFiles(this.files);
-        this.value = '';
-    });
+// ============ Shortcuts ============
+$('shortcutsBtn').addEventListener('click', () => $('shortcutsModal').classList.add('open'));
 
-    uploadArea.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#00d4ff';
-    });
+document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  const isInput = tag === 'input' || tag === 'select' || tag === 'textarea';
 
-    uploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '';
-    });
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+    return;
+  }
+  if(isInput) return;
 
-    uploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '';
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            addFiles(e.dataTransfer.files);
-        }
-    });
+  if(e.key === '?' || (e.shiftKey && e.key === '/')){
+    e.preventDefault();
+    $('shortcutsModal').classList.add('open');
+  } else if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+    e.preventDefault();
+    processAll();
+  } else if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a'){
+    e.preventDefault();
+    state.files.forEach(f => state.selectedIds.add(f.id));
+    render();
+  } else if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z'){
+    e.preventDefault();
+    undo();
+  } else if(e.key === 'Delete' || e.key === 'Backspace'){
+    if(state.selectedIds.size){
+      e.preventDefault();
+      Array.from(state.selectedIds).forEach(removeFile);
+      state.selectedIds.clear();
+    }
+  }
+});
 
-    // Paste from clipboard
-    document.addEventListener('paste', function(e) {
-        if (!e.clipboardData) return;
-        const items = e.clipboardData.items;
-        const imageFiles = [];
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].type.indexOf('image') === 0) {
-                const file = items[i].getAsFile();
-                if (file) imageFiles.push(file);
-            }
-        }
-        if (imageFiles.length > 0) {
-            addFiles(imageFiles);
-            updateStatusMessage(`📋 ${imageFiles.length} عکس از کلیپ‌بورد اضافه شد.`, 'success');
-        }
-    });
+// ============ Logo Easter Egg ============
+$('logoGroup').addEventListener('click', () => {
+  state.logoClicks++;
+  if(state.logoClicks >= 5){
+    state.logoClicks = 0;
+    confetti();
+    setTimeout(() => {
+      toast('💖 مهناز جون، تو بهترین مهندس دنیایی! این سایت مال خودته ✨', 'success');
+    }, 300);
+  }
+  clearTimeout(window.__logoReset);
+  window.__logoReset = setTimeout(() => state.logoClicks = 0, 1500);
+});
 
-    processAllBtn.addEventListener('click', processAll);
-    downloadAllBtn.addEventListener('click', downloadAll);
-    zipBtn.addEventListener('click', downloadZip);
-    summaryBtn.addEventListener('click', showSummary);
+// ============ PWA ============
+(function(){
+  const manifest = {
+    name: 'ImageForge 2026',
+    short_name: 'ImageForge',
+    description: 'ابزار حرفه‌ای فشرده‌سازی عکس',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#080b14',
+    theme_color: '#38bdf8',
+    icons: [{
+      src: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192"><rect width="192" height="192" rx="40" fill="#080b14"/><text x="96" y="130" font-size="110" text-anchor="middle">🚀</text></svg>'),
+      sizes: '192x192',
+      type: 'image/svg+xml'
+    }]
+  };
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+  document.head.appendChild(link);
 
-    clearBtn.addEventListener('click', function() {
-        if (filesList.length === 0) return;
-        if (!confirm('آیا مطمئن هستید؟ همه عکس‌ها پاک می‌شوند.')) return;
-        filesList = [];
-        renderGallery();
-        updateStatusMessage('🗑️ همه عکس‌ها پاک شدند.');
-    });
+  if('serviceWorker' in navigator){
+    const sw = "self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.open('v1').then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;}).catch(()=>r))))});";
+    try {
+      const blob = new Blob([sw], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(url).catch(() => {});
+    } catch(e){}
+  }
+})();
 
-    // ESC to close modals
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeCompare();
-            closeSummary();
-        }
-    });
+// ============ Init ============
+setTheme(localStorage.getItem('if_theme') || 'dark');
+updateSizeLabel();
+render();
 
-    // Click outside to close
-    document.getElementById('compareModal').addEventListener('click', function(e) {
-        if (e.target === this) closeCompare();
-    });
-    document.getElementById('summaryModal').addEventListener('click', function(e) {
-        if (e.target === this) closeSummary();
-    });
+setTimeout(() => {
+  const h = new Date().getHours();
+  const greet = h < 12 ? '🌅 صبح بخیر' : h < 17 ? '🌤️ ظهر بخیر' : h < 21 ? '🌇 عصر بخیر' : '🌙 شب بخیر';
+  toast(greet + ' مهناز جون! ✨ سایتت آماده‌ست', 'success');
+}, 500);
 
-    // Expose close functions globally
-    window.closeCompare = closeCompare;
-    window.closeSummary = closeSummary;
-
-    // ===== Init =====
-    loadSettings();
-    renderGallery();
-    setTimeout(showWelcomeMessage, 400);
 })();
 </script>
-
 </body>
 </html>
