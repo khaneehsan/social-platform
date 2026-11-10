@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ImageForge 2026 | سایت مهناز</title>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
             --bg-primary: #0a0e1a;
@@ -46,23 +43,20 @@
             padding: 16px;
             color: var(--text-primary);
             transition: var(--transition);
-            background-image: 
+            background-image:
                 radial-gradient(ellipse at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
                 radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(255, 107, 107, 0.03) 0%, transparent 70%);
         }
 
         [data-theme="light"] body {
-            background-image: 
+            background-image:
                 radial-gradient(ellipse at 10% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
                 radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.06) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 50%, rgba(255, 107, 107, 0.05) 0%, transparent 70%);
         }
 
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1440px; margin: 0 auto; }
 
         .header {
             text-align: center;
@@ -86,10 +80,7 @@
             background-clip: text;
         }
 
-        .header .logo span {
-            font-weight: 300;
-            -webkit-text-fill-color: var(--text-secondary);
-        }
+        .header .logo span { font-weight: 300; -webkit-text-fill-color: var(--text-secondary); }
 
         .header .subtitle {
             color: var(--text-secondary);
@@ -98,11 +89,7 @@
             font-size: 0.8rem;
         }
 
-        .header .subtitle .heart {
-            color: #ff6b6b;
-            display: inline-block;
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
+        .header .subtitle .heart { color: #ff6b6b; display: inline-block; animation: heartbeat 1.5s ease-in-out infinite; }
 
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
@@ -141,9 +128,7 @@
             width: 90px;
         }
 
-        .theme-toggle:hover {
-            border-color: var(--accent-1);
-        }
+        .theme-toggle:hover { border-color: var(--accent-1); }
 
         .theme-toggle .toggle-track {
             position: relative;
@@ -170,9 +155,7 @@
             font-size: 0.7rem;
         }
 
-        [data-theme="light"] .theme-toggle .toggle-thumb {
-            left: calc(100% - 22px);
-        }
+        [data-theme="light"] .theme-toggle .toggle-thumb { left: calc(100% - 22px); }
 
         .theme-toggle .toggle-label {
             position: absolute;
@@ -184,13 +167,8 @@
             pointer-events: none;
         }
 
-        .theme-toggle .toggle-label.light-label {
-            left: 8px;
-        }
-
-        .theme-toggle .toggle-label.dark-label {
-            right: 8px;
-        }
+        .theme-toggle .toggle-label.light-label { left: 8px; }
+        .theme-toggle .toggle-label.dark-label { right: 8px; }
 
         .badge-group {
             display: flex;
@@ -211,15 +189,54 @@
             transition: var(--transition);
         }
 
-        .badge:hover {
-            border-color: var(--accent-1);
-            color: var(--text-primary);
-        }
-
+        .badge:hover { border-color: var(--accent-1); color: var(--text-primary); }
         .badge.green { border-color: var(--accent-3); color: var(--accent-3); }
         .badge.upscale { border-color: var(--accent-1); color: var(--accent-1); }
         .badge.pink { border-color: #ff6b6b; color: #ff6b6b; }
         .badge.original { border-color: #fbbf24; color: #fbbf24; }
+
+        /* ===== Presets ===== */
+        .presets-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid var(--glass-border);
+            border-right: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+
+        .preset {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preset:hover {
+            border-color: var(--accent-1);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .preset.active {
+            background: var(--accent-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
+        }
 
         .upload-section {
             background: var(--glass-bg);
@@ -259,12 +276,7 @@
             transform: scale(1.02);
         }
 
-        .upload-area .icon {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 6px;
-        }
-
+        .upload-area .icon { font-size: 3rem; display: block; margin-bottom: 6px; }
         .upload-area h3 {
             font-size: 0.95rem;
             font-weight: 600;
@@ -274,12 +286,13 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
-        .upload-area p {
+        .upload-area p { color: var(--text-secondary); font-size: 0.75rem; }
+        .upload-area .paste-hint {
+            margin-top: 8px;
+            font-size: 0.65rem;
             color: var(--text-secondary);
-            font-size: 0.75rem;
+            opacity: 0.6;
         }
-
         .upload-area input[type="file"] {
             position: absolute;
             inset: 0;
@@ -287,12 +300,7 @@
             cursor: pointer;
         }
 
-        .settings-wrapper {
-            order: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .settings-wrapper { order: 1; display: flex; flex-direction: column; gap: 10px; }
 
         .settings-panel {
             display: grid;
@@ -305,11 +313,7 @@
             transition: var(--transition);
         }
 
-        .setting-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
+        .setting-item { display: flex; flex-direction: column; gap: 3px; }
 
         .setting-item label {
             font-weight: 600;
@@ -337,16 +341,10 @@
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
         }
 
-        .setting-item select option {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-        }
+        .setting-item select option { background: var(--bg-secondary); color: var(--text-primary); }
 
         [data-theme="light"] .setting-item input,
-        [data-theme="light"] .setting-item select {
-            background: white;
-            color: var(--text-primary);
-        }
+        [data-theme="light"] .setting-item select { background: white; color: var(--text-primary); }
 
         .stats-bar {
             display: flex;
@@ -408,16 +406,8 @@
             box-shadow: 0 8px 30px rgba(0, 212, 255, 0.2);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
         .btn-success {
             background: linear-gradient(135deg, #06f7a3, #00d4ff);
@@ -425,19 +415,19 @@
             color: #0a0e1a;
         }
 
-        .btn-success:hover {
-            transform: translateY(-2px);
+        .btn-success:hover { transform: translateY(-2px); }
+        .btn-success:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-zip {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            color: #0a0e1a;
         }
 
-        .btn-success:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
+        .btn-zip:hover { transform: translateY(-2px); }
+        .btn-zip:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .btn-outline:hover {
-            border-color: var(--accent-1);
-            background: rgba(0, 212, 255, 0.05);
-        }
+        .btn-outline:hover { border-color: var(--accent-1); background: rgba(0, 212, 255, 0.05); }
 
         .progress-bar {
             width: 100%;
@@ -473,20 +463,11 @@
             line-height: 1.8;
         }
 
-        .status-msg.success { 
-            border-color: var(--accent-3); 
-            color: var(--accent-3); 
-        }
-        .status-msg.warning { 
-            border-color: #f59e0b; 
-            color: #f59e0b; 
-        }
-        .status-msg.error { 
-            border-color: #ef4444; 
-            color: #ef4444; 
-        }
-        .status-msg.welcome { 
-            border-color: #ff6b6b; 
+        .status-msg.success { border-color: var(--accent-3); color: var(--accent-3); }
+        .status-msg.warning { border-color: #f59e0b; color: #f59e0b; }
+        .status-msg.error { border-color: #ef4444; color: #ef4444; }
+        .status-msg.welcome {
+            border-color: #ff6b6b;
             color: #ff6b6b;
             background: rgba(255, 107, 107, 0.05);
             box-shadow: var(--welcome-glow);
@@ -608,35 +589,14 @@
             color: var(--text-primary);
         }
 
-        .image-card .btn-group .btn-sm.download {
-            border-color: var(--accent-1);
-            color: var(--accent-1);
-        }
-
-        .image-card .btn-group .btn-sm.download:hover {
-            background: var(--accent-1);
-            color: var(--bg-primary);
-        }
-
-        .image-card .btn-group .btn-sm.upscale-btn {
-            border-color: var(--accent-2);
-            color: var(--accent-2);
-        }
-
-        .image-card .btn-group .btn-sm.upscale-btn:hover {
-            background: var(--accent-2);
-            color: white;
-        }
-
-        .image-card .btn-group .btn-sm.remove {
-            border-color: #ef4444;
-            color: #ef4444;
-        }
-
-        .image-card .btn-group .btn-sm.remove:hover {
-            background: #ef4444;
-            color: white;
-        }
+        .image-card .btn-group .btn-sm.download { border-color: var(--accent-1); color: var(--accent-1); }
+        .image-card .btn-group .btn-sm.download:hover { background: var(--accent-1); color: var(--bg-primary); }
+        .image-card .btn-group .btn-sm.upscale-btn { border-color: var(--accent-2); color: var(--accent-2); }
+        .image-card .btn-group .btn-sm.upscale-btn:hover { background: var(--accent-2); color: white; }
+        .image-card .btn-group .btn-sm.compare-btn { border-color: #fbbf24; color: #fbbf24; }
+        .image-card .btn-group .btn-sm.compare-btn:hover { background: #fbbf24; color: var(--bg-primary); }
+        .image-card .btn-group .btn-sm.remove { border-color: #ef4444; color: #ef4444; }
+        .image-card .btn-group .btn-sm.remove:hover { background: #ef4444; color: white; }
 
         .seo-footer {
             text-align: center;
@@ -649,35 +609,230 @@
             transition: var(--transition);
         }
 
-        .seo-footer .heart {
-            color: #ff6b6b;
+        .seo-footer .heart { color: #ff6b6b; }
+
+        /* ===== Modals ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .modal-close:hover { border-color: #ef4444; color: #ef4444; }
+
+        .modal-title {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Compare Slider */
+        .compare-container {
+            position: relative;
+            width: 100%;
+            max-height: 65vh;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: ew-resize;
+            user-select: none;
+            margin: 0 auto;
+            --pos: 50%;
+        }
+
+        .compare-container img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .compare-after {
+            clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+        }
+
+        .compare-label {
+            position: absolute;
+            top: 12px;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .compare-label.left { left: 12px; }
+        .compare-label.right { right: 12px; }
+
+        .compare-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: var(--pos);
+            width: 3px;
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+            transform: translateX(-50%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .compare-handle::after {
+            content: '⇔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            color: #0a0e1a;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .compare-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 12px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .compare-info span {
+            background: var(--glass-bg);
+            padding: 4px 12px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Summary */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .summary-stat {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .summary-stat.highlight { border-color: var(--accent-1); }
+        .summary-stat.success {
+            border-color: var(--accent-3);
+            background: rgba(6, 247, 163, 0.05);
+        }
+
+        .summary-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .summary-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .summary-msg {
+            text-align: center;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(6, 247, 163, 0.05);
+            border: 1px solid var(--accent-3);
+            border-radius: 12px;
+            color: var(--accent-3);
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1.8;
         }
 
         @media (max-width: 900px) {
-            .upload-section {
-                grid-template-columns: 1fr;
-            }
-            .upload-area {
-                aspect-ratio: auto;
-                padding: 24px 16px;
-                order: 1;
-            }
-            .settings-wrapper {
-                order: 2;
-            }
-            .settings-panel {
-                grid-template-columns: 1fr 1fr;
-            }
+            .upload-section { grid-template-columns: 1fr; }
+            .upload-area { aspect-ratio: auto; padding: 24px 16px; order: 1; }
+            .settings-wrapper { order: 2; }
+            .settings-panel { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 600px) {
-            .settings-panel {
-                grid-template-columns: 1fr;
-            }
+            .settings-panel { grid-template-columns: 1fr; }
             .header .logo { font-size: 1.8rem; }
             .gallery-grid { grid-template-columns: 1fr; }
             .stats-bar { flex-direction: column; align-items: stretch; gap: 3px; }
             .action-bar .btn { width: 100%; justify-content: center; }
+            .presets-bar .preset { flex: 1; justify-content: center; }
         }
     </style>
 </head>
@@ -701,13 +856,22 @@
 
         <div class="badge-group">
             <span class="badge pink">💖 مهناز جون</span>
-            <span class="badge green">🟢 کاهش حجم تا 70KB</span>
-            <span class="badge upscale">🔍 8K Ultra</span>
-            <span class="badge original">📐 1:1 مربع</span>
-            <span class="badge">📁 هر تعداد</span>
-            <span class="badge">🎨 فیلترها</span>
+            <span class="badge green">🟢 کاهش حجم واقعی</span>
+            <span class="badge upscale">⚖️ مقایسه قبل/بعد</span>
+            <span class="badge original">📦 خروجی ZIP</span>
+            <span class="badge">🎯 پریست‌های آماده</span>
+            <span class="badge">📊 گزارش نهایی</span>
             <span class="badge">🌓 روز/شب</span>
         </div>
+    </div>
+
+    <!-- Presets -->
+    <div class="presets-bar">
+        <button class="preset" data-preset="instagram">📸 اینستاگرام</button>
+        <button class="preset" data-preset="story">📱 استوری</button>
+        <button class="preset" data-preset="profile">👤 پروفایل</button>
+        <button class="preset" data-preset="web">🌐 وب</button>
+        <button class="preset" data-preset="print">🖨️ چاپ</button>
     </div>
 
     <div class="upload-section">
@@ -715,6 +879,7 @@
             <span class="icon">🚀</span>
             <h3>آپلود عکس</h3>
             <p>بکشید یا کلیک کنید</p>
+            <p class="paste-hint">💡 یا با Ctrl+V پیست کنید</p>
             <input type="file" id="fileInput" accept="image/*" multiple>
         </div>
 
@@ -736,7 +901,6 @@
                         <option value="1024">۱۰۲۴px</option>
                         <option value="2048">۲۰۴۸px</option>
                         <option value="4096">۴۰۹۶px (4K)</option>
-                        <option value="7680">۷۶۸۰px (8K)</option>
                     </select>
                 </div>
                 <div class="setting-item">
@@ -744,24 +908,25 @@
                     <select id="cropMode">
                         <option value="1:1">⬜ ۱:۱ (مربع)</option>
                         <option value="4:3">۴:۳</option>
-                        <option value="16:9">۱۶:۹</option>
                         <option value="3:2">۳:۲</option>
-                        <option value="original">اصلی (بدون برش)</option>
+                        <option value="16:9">۱۶:۹</option>
+                        <option value="9:16">۹:۱۶ (استوری)</option>
+                        <option value="original" selected>اصلی (بدون برش)</option>
                     </select>
                 </div>
                 <div class="setting-item">
                     <label>📁 فرمت خروجی</label>
                     <select id="outputFormat">
-                        <option value="image/jpeg">JPEG</option>
-                        <option value="image/png">PNG</option>
-                        <option value="image/webp">WebP</option>
+                        <option value="image/jpeg" selected>JPEG</option>
+                        <option value="image/png">PNG (کاهش محدود)</option>
+                        <option value="image/webp">WebP (بهترین)</option>
                     </select>
                 </div>
                 <div class="setting-item">
                     <label>🎨 فیلتر</label>
                     <select id="filterMode">
                         <option value="none">بدون فیلتر</option>
-                        <option value="sharpen">🔪 شارپنس</option>
+                        <option value="sharpen">🔪 شارپنس ملایم</option>
                         <option value="bw">⚫ سیاه‌سفید</option>
                         <option value="vintage">🟫 وینتیج</option>
                         <option value="bright">☀️ روشن‌تر</option>
@@ -769,26 +934,20 @@
                     </select>
                 </div>
                 <div class="setting-item">
-                    <label>🔍 افزایش کیفیت</label>
+                    <label>🔍 بزرگ‌نمایی (اختیاری)</label>
                     <select id="upscaleMode">
-                        <option value="none">بدون افزایش</option>
+                        <option value="none" selected>بدون افزایش</option>
                         <option value="2x">⬆️ ۲x</option>
                         <option value="4x">⬆️ ۴x</option>
-                        <option value="8x">⬆️ ۸x (8K)</option>
-                        <option value="enhanced">🌟 پیشرفته</option>
                     </select>
-                </div>
-                <div class="setting-item">
-                    <label>📛 الگوی پیش‌فرض نام</label>
-                    <input type="text" id="namePattern" value="mahnaz_{index}" placeholder="mahnaz_{index}">
                 </div>
             </div>
 
             <div class="stats-bar">
-                <div class="stat">📸 <span id="totalCount">۰</span></div>
-                <div class="stat">📦 <span id="totalSize">۰</span></div>
-                <div class="stat">✅ <span id="processedCount">۰</span></div>
-                <div class="stat">📊 <span id="reductionPercent">۰%</span></div>
+                <div class="stat">📸 <span id="totalCount">0</span></div>
+                <div class="stat">📦 <span id="totalSize">0</span></div>
+                <div class="stat">✅ <span id="processedCount">0</span></div>
+                <div class="stat">📊 <span id="reductionPercent">0%</span></div>
             </div>
 
             <div class="progress-bar">
@@ -798,9 +957,11 @@
             <div class="action-bar">
                 <button class="btn btn-primary" id="processAllBtn" disabled>🚀 پردازش</button>
                 <button class="btn btn-success" id="downloadAllBtn" disabled>⬇️ دانلود همه</button>
+                <button class="btn btn-zip" id="zipBtn" disabled>📦 ZIP</button>
+                <button class="btn btn-outline" id="summaryBtn" disabled>📊 گزارش</button>
                 <button class="btn btn-outline" id="clearBtn">🗑️</button>
-                <button class="btn btn-outline" onclick="saveSettings()">💾 ذخیره</button>
-                <button class="btn btn-outline" onclick="loadSettings()">📂 بارگذاری</button>
+                <button class="btn btn-outline" onclick="saveSettings()">💾</button>
+                <button class="btn btn-outline" onclick="loadSettings()">📂</button>
             </div>
 
             <div class="status-msg" id="statusMessage">🌸 در حال بارگذاری...</div>
@@ -811,689 +972,887 @@
 
     <div class="seo-footer">
         <p><strong>ImageForge 2026</strong> — ویژه <span class="heart">❤️</span> مهناز جون · بهترین مهندس دنیا</p>
-        <p style="margin-top:4px; opacity:0.5; font-size:0.65rem;">📐 کاهش حجم تا 70KB · برش 1:1 مربع بدون کشیدگی</p>
+        <p style="margin-top:4px; opacity:0.5; font-size:0.65rem;">📐 حفظ نسبت تصویر · فشرده‌سازی هوشمند · مقایسه بصری</p>
+    </div>
+</div>
+
+<!-- Compare Modal -->
+<div class="modal" id="compareModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeCompare()">✕</button>
+        <div class="modal-title">⚖️ مقایسه قبل و بعد</div>
+        <div class="compare-container" id="compareContainer">
+            <img class="compare-before" id="compareBefore" alt="قبل">
+            <img class="compare-after" id="compareAfter" alt="بعد">
+            <span class="compare-label left">بعد ✨</span>
+            <span class="compare-label right">قبل 📷</span>
+            <div class="compare-handle"></div>
+        </div>
+        <div class="compare-info" id="compareInfo"></div>
+    </div>
+</div>
+
+<!-- Summary Modal -->
+<div class="modal" id="summaryModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <button class="modal-close" onclick="closeSummary()">✕</button>
+        <div class="modal-title">📊 گزارش نهایی پردازش</div>
+        <div id="summaryContent"></div>
     </div>
 </div>
 
 <script>
-    (function() {
-        // ===== پیغام خوش‌آمد =====
-        function showWelcomeMessage() {
-            const now = new Date();
-            const hour = now.getHours();
-            let timeGreeting = '';
-            
-            if (hour >= 5 && hour < 12) timeGreeting = '🌅 صبح بخیر';
-            else if (hour >= 12 && hour < 17) timeGreeting = '🌤️ ظهر بخیر';
-            else if (hour >= 17 && hour < 21) timeGreeting = '🌇 عصر بخیر';
-            else timeGreeting = '🌙 شب بخیر';
-            
-            const msg = document.getElementById('statusMessage');
-            msg.className = 'status-msg welcome';
-            msg.textContent = '';
-            
-            const text = `${timeGreeting} مهناز جون! 🌸 ✨ به بهترین مهندس دنیا خوش اومدی! 🚀 سایت خودت آماده‌ست تا هر کاری که دوست داری با عکس‌هات انجام بدی. 💎 یادت باشه: تو بهترینی! ❤️`;
-            
-            let i = 0;
-            const speed = 35;
-            
-            function typeWriter() {
-                if (i < text.length) {
-                    msg.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, speed);
-                }
+(function() {
+    'use strict';
+
+    // ===== Welcome =====
+    function showWelcomeMessage() {
+        const now = new Date();
+        const hour = now.getHours();
+        let timeGreeting = '';
+        if (hour >= 5 && hour < 12) timeGreeting = '🌅 صبح بخیر';
+        else if (hour >= 12 && hour < 17) timeGreeting = '🌤️ ظهر بخیر';
+        else if (hour >= 17 && hour < 21) timeGreeting = '🌇 عصر بخیر';
+        else timeGreeting = '🌙 شب بخیر';
+
+        const msg = document.getElementById('statusMessage');
+        msg.className = 'status-msg welcome';
+        msg.textContent = '';
+        const text = `${timeGreeting} مهناز جون! 🌸 ✨ به بهترین مهندس دنیا خوش اومدی! 🚀 سایت خودت آماده‌ست. 💎`;
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                msg.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 35);
             }
-            
-            setTimeout(typeWriter, 400);
         }
+        setTimeout(typeWriter, 400);
+    }
 
-        // ===== Theme =====
-        const themeToggle = document.getElementById('themeToggle');
-        const toggleThumb = document.getElementById('toggleThumb');
+    // ===== Theme =====
+    const themeToggle = document.getElementById('themeToggle');
+    const toggleThumb = document.getElementById('toggleThumb');
 
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-            toggleThumb.textContent = theme === 'dark' ? '🌙' : '☀️';
-        }
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        toggleThumb.textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
 
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme') || 'dark';
-            setTheme(current === 'dark' ? 'light' : 'dark');
-        }
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+    }
 
-        themeToggle.addEventListener('click', toggleTheme);
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        setTheme(savedTheme);
+    themeToggle.addEventListener('click', toggleTheme);
+    setTheme(localStorage.getItem('theme') || 'dark');
 
-        // ===== DOM =====
-        const fileInput = document.getElementById('fileInput');
-        const uploadArea = document.getElementById('uploadArea');
-        const galleryGrid = document.getElementById('galleryGrid');
-        const totalCount = document.getElementById('totalCount');
-        const totalSize = document.getElementById('totalSize');
-        const processedCount = document.getElementById('processedCount');
-        const reductionPercent = document.getElementById('reductionPercent');
-        const statusMessage = document.getElementById('statusMessage');
-        const processAllBtn = document.getElementById('processAllBtn');
-        const downloadAllBtn = document.getElementById('downloadAllBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const progressFill = document.getElementById('progressFill');
+    // ===== DOM =====
+    const fileInput = document.getElementById('fileInput');
+    const uploadArea = document.getElementById('uploadArea');
+    const galleryGrid = document.getElementById('galleryGrid');
+    const totalCount = document.getElementById('totalCount');
+    const totalSize = document.getElementById('totalSize');
+    const processedCount = document.getElementById('processedCount');
+    const reductionPercent = document.getElementById('reductionPercent');
+    const statusMessage = document.getElementById('statusMessage');
+    const processAllBtn = document.getElementById('processAllBtn');
+    const downloadAllBtn = document.getElementById('downloadAllBtn');
+    const zipBtn = document.getElementById('zipBtn');
+    const summaryBtn = document.getElementById('summaryBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const progressFill = document.getElementById('progressFill');
 
-        const targetSizeKB = document.getElementById('targetSizeKB');
-        const targetDimension = document.getElementById('targetDimension');
-        const cropMode = document.getElementById('cropMode');
-        const outputFormat = document.getElementById('outputFormat');
-        const filterMode = document.getElementById('filterMode');
-        const upscaleMode = document.getElementById('upscaleMode');
-        const namePattern = document.getElementById('namePattern');
+    const targetSizeKB = document.getElementById('targetSizeKB');
+    const targetDimension = document.getElementById('targetDimension');
+    const cropMode = document.getElementById('cropMode');
+    const outputFormat = document.getElementById('outputFormat');
+    const filterMode = document.getElementById('filterMode');
+    const upscaleMode = document.getElementById('upscaleMode');
 
-        let filesList = [];
-        let idCounter = 0;
-        let isProcessing = false;
-        let welcomeShown = false;
+    let filesList = [];
+    let idCounter = 0;
+    let isProcessing = false;
+    let compareObjectUrl = null;
 
-        window.addEventListener('load', function() {
-            if (!welcomeShown) {
-                setTimeout(showWelcomeMessage, 300);
-                welcomeShown = true;
+    // ===== Helpers =====
+    function formatBytes(bytes) {
+        if (!bytes || bytes === 0) return '0 B';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(2) + ' MB';
+    }
+
+    function getAspectRatio(mode) {
+        if (mode === '1:1') return 1;
+        if (mode === '4:3') return 4 / 3;
+        if (mode === '3:2') return 3 / 2;
+        if (mode === '16:9') return 16 / 9;
+        if (mode === '9:16') return 9 / 16;
+        return null;
+    }
+
+    function applyFilter(ctx, w, h, filter, imageData) {
+        if (filter === 'none' || !imageData) return;
+        const data = imageData.data;
+        const len = data.length;
+
+        if (filter === 'bw') {
+            for (let i = 0; i < len; i += 4) {
+                const g = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                data[i] = data[i + 1] = data[i + 2] = g;
             }
-        });
-
-        // ===== Helpers =====
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 B';
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-            return (bytes / 1048576).toFixed(2) + ' MB';
-        }
-
-        function getAspectRatio(mode) {
-            if (mode === '1:1') return 1;
-            if (mode === '4:3') return 4/3;
-            if (mode === '16:9') return 16/9;
-            if (mode === '3:2') return 3/2;
-            return null;
-        }
-
-        function applyFilter(ctx, w, h, filter, imageData) {
-            if (filter === 'none' || !imageData) return;
-            const data = imageData.data;
-            const len = data.length;
-            
-            if (filter === 'bw') {
-                for (let i = 0; i < len; i += 4) {
-                    const g = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
-                    data[i] = data[i+1] = data[i+2] = g;
-                }
-            } else if (filter === 'vintage') {
-                for (let i = 0; i < len; i += 4) {
-                    data[i] = Math.min(255, data[i] * 1.1 + 20);
-                    data[i+1] = Math.min(255, data[i+1] * 0.9 + 10);
-                    data[i+2] = Math.min(255, data[i+2] * 0.8);
-                }
-            } else if (filter === 'bright') {
-                for (let i = 0; i < len; i += 4) {
-                    data[i] = Math.min(255, data[i] * 1.2);
-                    data[i+1] = Math.min(255, data[i+1] * 1.2);
-                    data[i+2] = Math.min(255, data[i+2] * 1.2);
-                }
-            } else if (filter === 'contrast') {
-                const f = 1.5;
-                for (let i = 0; i < len; i += 4) {
-                    data[i] = Math.min(255, Math.max(0, (data[i] - 128) * f + 128));
-                    data[i+1] = Math.min(255, Math.max(0, (data[i+1] - 128) * f + 128));
-                    data[i+2] = Math.min(255, Math.max(0, (data[i+2] - 128) * f + 128));
-                }
+        } else if (filter === 'vintage') {
+            for (let i = 0; i < len; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.1 + 20);
+                data[i + 1] = Math.min(255, data[i + 1] * 0.9 + 10);
+                data[i + 2] = Math.min(255, data[i + 2] * 0.8);
             }
-            ctx.putImageData(imageData, 0, 0);
+        } else if (filter === 'bright') {
+            for (let i = 0; i < len; i += 4) {
+                data[i] = Math.min(255, data[i] * 1.2);
+                data[i + 1] = Math.min(255, data[i + 1] * 1.2);
+                data[i + 2] = Math.min(255, data[i + 2] * 1.2);
+            }
+        } else if (filter === 'contrast') {
+            const f = 1.5;
+            for (let i = 0; i < len; i += 4) {
+                data[i] = Math.min(255, Math.max(0, (data[i] - 128) * f + 128));
+                data[i + 1] = Math.min(255, Math.max(0, (data[i + 1] - 128) * f + 128));
+                data[i + 2] = Math.min(255, Math.max(0, (data[i + 2] - 128) * f + 128));
+            }
         }
+        ctx.putImageData(imageData, 0, 0);
+    }
 
-        function applySharpen(ctx, w, h) {
-            const imageData = ctx.getImageData(0, 0, w, h);
-            const data = imageData.data;
-            const copy = new Uint8ClampedArray(data);
-            for (let y = 1; y < h - 1; y++) {
-                for (let x = 1; x < w - 1; x++) {
-                    const idx = (y * w + x) * 4;
-                    const kernel = [[0,-1,0],[-1,5,-1],[0,-1,0]];
-                    for (let c = 0; c < 3; c++) {
-                        let sum = 0;
-                        for (let ky = -1; ky <= 1; ky++) {
-                            for (let kx = -1; kx <= 1; kx++) {
-                                const nIdx = ((y + ky) * w + (x + kx)) * 4 + c;
-                                sum += copy[nIdx] * kernel[ky+1][kx+1];
-                            }
+    // Unsharp Mask — ملایم و حرفه‌ای
+    function applyUnsharpMask(ctx, w, h, amount) {
+        amount = amount || 0.5;
+        const imageData = ctx.getImageData(0, 0, w, h);
+        const data = imageData.data;
+        const copy = new Uint8ClampedArray(data);
+        for (let y = 1; y < h - 1; y++) {
+            for (let x = 1; x < w - 1; x++) {
+                for (let c = 0; c < 3; c++) {
+                    let sum = 0;
+                    for (let ky = -1; ky <= 1; ky++) {
+                        for (let kx = -1; kx <= 1; kx++) {
+                            sum += copy[((y + ky) * w + (x + kx)) * 4 + c];
                         }
-                        data[idx + c] = Math.min(255, Math.max(0, sum));
                     }
+                    const blurred = sum / 9;
+                    const idx = (y * w + x) * 4 + c;
+                    data[idx] = Math.min(255, Math.max(0, copy[idx] + amount * (copy[idx] - blurred)));
                 }
             }
-            ctx.putImageData(imageData, 0, 0);
         }
+        ctx.putImageData(imageData, 0, 0);
+    }
 
-        function downloadDirect(blob, filename) {
-            const link = document.createElement('a');
-            link.download = filename;
-            link.href = URL.createObjectURL(blob);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setTimeout(() => URL.revokeObjectURL(link.href), 5000);
-            updateStatusMessage(`⬇️ دانلود ${filename} شروع شد.`, 'success');
-        }
+    function downloadDirect(blob, filename, silent) {
+        const link = document.createElement('a');
+        link.download = filename;
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        if (!silent) updateStatusMessage(`⬇️ دانلود ${filename} شروع شد.`, 'success');
+    }
 
-        // ===== پردازش با رفع کشیدگی =====
-        function processSingleItem(item) {
-            return new Promise((resolve) => {
-                if (!item.originalData) {
-                    item.status = 'error';
-                    resolve();
-                    return;
-                }
+    // ===== FIXED processSingleItem =====
+    function processSingleItem(item) {
+        return new Promise((resolve) => {
+            if (!item.originalData) { item.status = 'error'; resolve(); return; }
 
-                item.status = 'processing';
-                renderGallery();
+            item.status = 'processing';
+            renderGallery();
 
-                const img = item.originalData.img;
-                const targetSize = parseInt(targetSizeKB.value) * 1024 || 70 * 1024;
-                const crop = cropMode.value;
-                const format = outputFormat.value;
-                const filter = filterMode.value;
-                const upscale = upscaleMode.value;
+            const img = item.originalData.img;
+            const targetSize = (parseInt(targetSizeKB.value) || 70) * 1024;
+            const crop = cropMode.value;
+            const format = outputFormat.value;
+            const filter = filterMode.value;
+            const upscale = upscaleMode.value;
 
-                // ===== تعیین سایز نهایی =====
-                let targetDim = parseInt(targetDimension.value);
-                let finalDim;
-                
-                if (targetDimension.value === 'original') {
-                    finalDim = Math.min(img.width, img.height);
+            // ابعاد پایه
+            const baseDim = (targetDimension.value === 'original')
+                ? Math.max(img.width, img.height)
+                : (parseInt(targetDimension.value) || 800);
+
+            // ضریب بزرگ‌نمایی (فقط اگر انتخاب شده)
+            const upscaleFactor = upscale === '2x' ? 2 : upscale === '4x' ? 4 : 1;
+
+            // ناحیه برش
+            const ratio = getAspectRatio(crop);
+            let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
+            if (ratio !== null) {
+                if (img.width / img.height > ratio) {
+                    cropW = img.height * ratio;
+                    cropX = (img.width - cropW) / 2;
                 } else {
-                    finalDim = targetDim || 800;
+                    cropH = img.width / ratio;
+                    cropY = (img.height - cropH) / 2;
                 }
+            }
 
-                if (upscale === '2x') finalDim = finalDim * 2;
-                else if (upscale === '4x') finalDim = finalDim * 4;
-                else if (upscale === '8x') finalDim = finalDim * 8;
-                else if (upscale === 'enhanced') finalDim = finalDim * 4;
+            // ابعاد خروجی با حفظ نسبت
+            const MAX_DIM = 4096;
+            let outW, outH;
+            const effectiveRatio = ratio !== null ? ratio : (cropW / cropH);
 
-                const MAX_DIM = 7680;
-                if (finalDim > MAX_DIM) finalDim = MAX_DIM;
-
-                // ===== برش با حفظ نسبت =====
-                let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
-                const ratio = getAspectRatio(crop);
-                
-                if (ratio !== null) {
-                    if (img.width / img.height > ratio) {
-                        cropW = img.height * ratio;
-                        cropX = (img.width - cropW) / 2;
-                        cropY = 0;
-                        cropH = img.height;
-                    } else {
-                        cropH = img.width / ratio;
-                        cropX = 0;
-                        cropY = (img.height - cropH) / 2;
-                        cropW = img.width;
-                    }
-                }
-
-                // ===== افزایش کیفیت پیشرفته =====
-                function upscaleImage(source, targetW, targetH, method) {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = targetW;
-                    canvas.height = targetH;
-                    const ctx = canvas.getContext('2d');
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-
-                    if (method === 'enhanced') {
-                        const steps = 4;
-                        let tempW = source.width;
-                        let tempH = source.height;
-                        let tempCanvas = document.createElement('canvas');
-                        let tempCtx = tempCanvas.getContext('2d');
-                        tempCanvas.width = tempW;
-                        tempCanvas.height = tempH;
-                        tempCtx.drawImage(source, 0, 0);
-
-                        for (let i = 0; i < steps; i++) {
-                            const nextW = Math.min(tempW * 2, targetW);
-                            const nextH = Math.min(tempH * 2, targetH);
-                            const stepCanvas = document.createElement('canvas');
-                            stepCanvas.width = nextW;
-                            stepCanvas.height = nextH;
-                            const stepCtx = stepCanvas.getContext('2d');
-                            stepCtx.imageSmoothingEnabled = true;
-                            stepCtx.imageSmoothingQuality = 'high';
-                            stepCtx.drawImage(tempCanvas, 0, 0, tempW, tempH, 0, 0, nextW, nextH);
-                            
-                            if (i < steps - 1) {
-                                applySharpen(stepCtx, nextW, nextH);
-                            }
-                            
-                            tempCanvas = stepCanvas;
-                            tempCtx = stepCtx;
-                            tempW = nextW;
-                            tempH = nextH;
-                            if (tempW >= targetW && tempH >= targetH) break;
-                        }
-                        
-                        ctx.drawImage(tempCanvas, 0, 0, tempW, tempH, 0, 0, targetW, targetH);
-                    } else {
-                        ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, targetW, targetH);
-                    }
-
-                    return canvas;
-                }
-
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = finalDim;
-                tempCanvas.height = finalDim;
-                const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.imageSmoothingEnabled = true;
-                tempCtx.imageSmoothingQuality = 'high';
-                
-                let finalCanvas;
-                if (upscale === 'enhanced') {
-                    const midDim = Math.min(finalDim, 2048);
-                    const midCanvas = document.createElement('canvas');
-                    midCanvas.width = midDim;
-                    midCanvas.height = midDim;
-                    const midCtx = midCanvas.getContext('2d');
-                    midCtx.imageSmoothingEnabled = true;
-                    midCtx.imageSmoothingQuality = 'high';
-                    midCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, midDim, midDim);
-                    finalCanvas = upscaleImage(midCanvas, finalDim, finalDim, 'enhanced');
+            if (ratio === null) {
+                let cap = baseDim * upscaleFactor;
+                cap = Math.min(cap, MAX_DIM);
+                if (upscaleFactor === 1) cap = Math.min(cap, Math.max(cropW, cropH));
+                const scale = Math.min(1, cap / Math.max(cropW, cropH));
+                outW = Math.max(1, Math.round(cropW * scale));
+                outH = Math.max(1, Math.round(cropH * scale));
+            } else {
+                let long = baseDim * upscaleFactor;
+                long = Math.min(long, MAX_DIM);
+                if (upscaleFactor === 1) long = Math.min(long, Math.max(cropW, cropH));
+                if (effectiveRatio >= 1) {
+                    outW = long;
+                    outH = Math.max(1, Math.round(long / effectiveRatio));
                 } else {
-                    tempCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, finalDim, finalDim);
-                    finalCanvas = tempCanvas;
-                    
-                    if (upscale === '4x' || upscale === '8x') {
-                        const enhancedCanvas = upscaleImage(finalCanvas, finalDim, finalDim, 'enhanced');
-                        finalCanvas = enhancedCanvas;
-                    }
+                    outH = long;
+                    outW = Math.max(1, Math.round(long * effectiveRatio));
                 }
+            }
 
-                const ctx = finalCanvas.getContext('2d');
-                if (filter === 'sharpen') {
-                    applySharpen(ctx, finalDim, finalDim);
-                } else if (filter !== 'none') {
-                    const imageData = ctx.getImageData(0, 0, finalDim, finalDim);
-                    applyFilter(ctx, finalDim, finalDim, filter, imageData);
-                }
+            // رسم روی کانواس
+            const canvas = document.createElement('canvas');
+            canvas.width = outW;
+            canvas.height = outH;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
 
-                let quality = 0.92;
+            // فیلتر
+            if (filter === 'sharpen') {
+                applyUnsharpMask(ctx, outW, outH, 0.5);
+            } else if (filter !== 'none') {
+                const imageData = ctx.getImageData(0, 0, outW, outH);
+                applyFilter(ctx, outW, outH, filter, imageData);
+            }
+
+            // خروجی با جستجوی کیفیت درست (نزولی — هرگز افزایشی!)
+            function tryExport(q) {
+                return new Promise((res) => {
+                    if (format === 'image/png') canvas.toBlob(res, 'image/png');
+                    else canvas.toBlob(res, format, q);
+                });
+            }
+
+            (async function adjust() {
                 let bestBlob = null;
+                let bestQ = null;
 
-                function tryExport(q) {
-                    return new Promise((res) => {
-                        if (format === 'image/png') {
-                            finalCanvas.toBlob((b) => res(b), 'image/png');
-                        } else if (format === 'image/webp') {
-                            finalCanvas.toBlob((b) => res(b), 'image/webp', q);
-                        } else {
-                            finalCanvas.toBlob((b) => res(b), 'image/jpeg', q);
+                if (format === 'image/png') {
+                    bestBlob = await tryExport(1);
+                    if (bestBlob && bestBlob.size > targetSize) {
+                        updateStatusMessage(
+                            `⚠️ PNG قابل کاهش به ${formatBytes(targetSize)} نیست (${formatBytes(bestBlob.size)}). از JPEG/WebP استفاده کن.`,
+                            'warning'
+                        );
+                    }
+                } else {
+                    // از کیفیت بالا به پایین
+                    for (let q = 0.92; q >= 0.30; q -= 0.04) {
+                        const blob = await tryExport(q);
+                        if (blob && blob.size <= targetSize) {
+                            bestBlob = blob;
+                            bestQ = q;
+                            break;
                         }
-                    });
+                    }
+                    if (!bestBlob) {
+                        // حتی در 0.30 نشد → پایین‌ترین ممکن
+                        bestBlob = await tryExport(0.30);
+                        bestQ = 0.30;
+                        if (bestBlob) {
+                            updateStatusMessage(
+                                `⚠️ هدف ${formatBytes(targetSize)} دست نیافت. کمترین ممکن: ${formatBytes(bestBlob.size)}`,
+                                'warning'
+                            );
+                        }
+                    }
                 }
 
-                (async function adjust() {
-                    let currentQ = quality;
-                    const maxAttempts = 25;
-                    for (let i = 0; i < maxAttempts; i++) {
-                        const blob = await tryExport(currentQ);
-                        if (!blob) continue;
-                        if (blob.size <= targetSize) {
-                            bestBlob = blob;
-                            break;
-                        } else {
-                            currentQ = Math.max(0.50, currentQ - 0.015);
-                            if (currentQ < 0.50) break;
-                        }
-                    }
-                    if (!bestBlob) bestBlob = await tryExport(0.65);
-                    if (!bestBlob) bestBlob = await tryExport(0.75);
+                if (bestBlob) {
+                    item.processedBlob = bestBlob;
+                    item.processedDim = `${outW}×${outH}`;
+                    item.qualityUsed = bestQ;
+                    item.status = upscale !== 'none' ? 'upscaled' : 'done';
+                    const reduction = ((item.file.size - bestBlob.size) / item.file.size * 100).toFixed(1);
+                    const dimText = `${outW}×${outH}`;
+                    updateStatusMessage(
+                        `✅ ${item.file.name} → ${formatBytes(bestBlob.size)} (${dimText} | کیفیت ${Math.round((bestQ || 1) * 100)}% | کاهش ${reduction}%)`,
+                        'success'
+                    );
+                } else {
+                    item.status = 'error';
+                    updateStatusMessage(`❌ پردازش ${item.file.name} ناموفق بود`, 'error');
+                }
 
-                    if (bestBlob) {
-                        item.processedBlob = bestBlob;
-                        item.processedDim = finalDim;
-                        const isUpscaled = upscale !== 'none';
-                        item.status = isUpscaled ? 'upscaled' : 'done';
-                        
-                        const reduction = ((item.file.size - bestBlob.size) / item.file.size * 100).toFixed(1);
-                        const dimText = finalDim >= 7680 ? '8K' : finalDim >= 3840 ? '4K' : `${finalDim}px`;
-                        const sizeInfo = targetDimension.value === 'original' ? ' (سایز اصلی)' : '';
-                        const cropInfo = crop === '1:1' ? ' 📐 مربع' : '';
-                        updateStatusMessage(`✅ ${item.file.name} → ${formatBytes(bestBlob.size)} (${dimText}${sizeInfo}${cropInfo} | کاهش ${reduction}%)`, 'success');
-                    } else {
-                        item.status = 'error';
-                        updateStatusMessage(`❌ پردازش ${item.file.name} ناموفق بود`, 'error');
-                    }
-                    
-                    updateProgress();
-                    renderGallery();
-                    updateStats();
-                    resolve();
-                })();
-            });
+                updateProgress();
+                renderGallery();
+                updateStats();
+                resolve();
+            })();
+        });
+    }
+
+    async function processAll() {
+        if (isProcessing) return;
+        if (filesList.length === 0) {
+            updateStatusMessage('⚠️ ابتدا حداقل یک عکس آپلود کنید.', 'error');
+            return;
         }
 
-        async function processAll() {
-            if (isProcessing) return;
-            if (filesList.length === 0) {
-                updateStatusMessage('⚠️ ابتدا حداقل یک عکس آپلود کنید.', 'error');
-                return;
-            }
+        isProcessing = true;
+        processAllBtn.disabled = true;
+        updateProgress();
 
-            isProcessing = true;
-            processAllBtn.disabled = true;
-            updateProgress();
-
-            const pendingItems = filesList.filter(f => f.status !== 'done' && f.status !== 'upscaled');
-            updateStatusMessage(`⏳ در حال پردازش ${pendingItems.length} عکس...`);
-
-            const batchSize = 2;
-            for (let i = 0; i < pendingItems.length; i += batchSize) {
-                const batch = pendingItems.slice(i, i + batchSize);
-                await Promise.all(batch.map(item => processSingleItem(item)));
-                updateProgress();
-            }
-
+        const pendingItems = filesList.filter(f => f.status !== 'done' && f.status !== 'upscaled');
+        if (pendingItems.length === 0) {
+            updateStatusMessage('ℹ️ همه عکس‌ها قبلاً پردازش شده‌اند.', 'warning');
             isProcessing = false;
             processAllBtn.disabled = false;
-            const doneCount = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
-            updateStatusMessage(`✅ ${doneCount} عکس با موفقیت پردازش شد.`, 'success');
-            renderGallery();
+            return;
         }
 
-        // ===== UI =====
-        function updateProgress() {
-            const total = filesList.length || 1;
-            const done = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
-            progressFill.style.width = (done / total * 100) + '%';
-        }
+        updateStatusMessage(`⏳ در حال پردازش ${pendingItems.length} عکس...`);
 
-        function renderGallery() {
-            galleryGrid.innerHTML = '';
-            filesList.forEach((item) => {
-                const card = document.createElement('div');
-                card.className = 'image-card';
-
-                let statusText = 'در انتظار';
-                let statusClass = '';
-                if (item.status === 'done') { statusText = '✅ پردازش‌شده'; statusClass = 'done'; }
-                else if (item.status === 'upscaled') { statusText = '🔍 8K Ultra'; statusClass = 'upscaled'; }
-                else if (item.status === 'processing') { statusText = '⏳ در حال پردازش'; statusClass = 'processing'; }
-                else if (item.status === 'error') { statusText = '❌ خطا'; statusClass = 'error'; }
-
-                const src = item.originalData?.src || '';
-                const name = item.customName || item.file?.name || 'عکس';
-                const size = item.file ? formatBytes(item.file.size) : '—';
-                const outputSize = item.processedBlob ? formatBytes(item.processedBlob.size) : '—';
-                const outputDim = item.processedDim ? `${item.processedDim}×${item.processedDim}` : '—';
-
-                card.innerHTML = `
-                    <div class="img-wrap">
-                        <img src="${src}" alt="${name}" loading="lazy">
-                    </div>
-                    <div class="card-footer">
-                        <input class="file-name-input" type="text" value="${name}" data-id="${item.id}" placeholder="نام عکس را وارد کنید">
-                        <div class="file-meta">
-                            <span class="file-size">${size}</span>
-                            <span class="status-badge ${statusClass}">${statusText}</span>
-                        </div>
-                        ${item.processedBlob ? `<div style="font-size:0.5rem; opacity:0.6; padding:1px 8px; border-radius:40px; border:1px solid var(--glass-border); text-align:center;">${outputSize} | ${outputDim}</div>` : ''}
-                    </div>
-                    <div class="btn-group">
-                        ${item.processedBlob ? `<button class="btn-sm download" data-id="${item.id}">⬇️</button>` : ''}
-                        ${item.originalData ? `<button class="btn-sm upscale-btn" data-id="${item.id}" ${item.status === 'processing' ? 'disabled' : ''}>🔍</button>` : ''}
-                        <button class="btn-sm remove" data-id="${item.id}">✕</button>
-                    </div>
-                `;
-                galleryGrid.appendChild(card);
-
-                // اسم‌گذاری جداگانه
-                const nameInput = card.querySelector('.file-name-input');
-                nameInput.addEventListener('input', function(e) {
-                    const id = parseInt(this.dataset.id);
-                    const target = filesList.find(f => f.id === id);
-                    if (target) {
-                        target.customName = this.value;
-                    }
-                });
-
-                card.querySelector('.btn-sm.download')?.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    downloadSingle(parseInt(this.dataset.id));
-                });
-
-                card.querySelector('.btn-sm.upscale-btn')?.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const id = parseInt(this.dataset.id);
-                    const item = filesList.find(f => f.id === id);
-                    if (item) {
-                        upscaleMode.value = '4x';
-                        processSingleItem(item);
-                    }
-                });
-
-                card.querySelector('.btn-sm.remove')?.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    removeFile(parseInt(this.dataset.id));
-                });
-            });
-            updateStats();
-        }
-
-        function updateStats() {
-            totalCount.textContent = filesList.length;
-            let totalBytes = filesList.reduce((sum, item) => sum + (item.file ? item.file.size : 0), 0);
-            totalSize.textContent = formatBytes(totalBytes);
-            const done = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
-            processedCount.textContent = done;
-            
-            let totalBefore = 0, totalAfter = 0;
-            filesList.forEach(f => {
-                if (f.processedBlob) {
-                    totalBefore += f.file.size;
-                    totalAfter += f.processedBlob.size;
-                }
-            });
-            reductionPercent.textContent = totalBefore > 0 ? ((1 - totalAfter/totalBefore) * 100).toFixed(1) + '%' : '۰%';
-            
-            processAllBtn.disabled = filesList.length === 0 || isProcessing;
-            const hasDone = filesList.some(f => f.status === 'done' || f.status === 'upscaled');
-            downloadAllBtn.disabled = !hasDone || isProcessing;
+        const batchSize = 2;
+        for (let i = 0; i < pendingItems.length; i += batchSize) {
+            const batch = pendingItems.slice(i, i + batchSize);
+            await Promise.all(batch.map(item => processSingleItem(item)));
             updateProgress();
         }
 
-        function removeFile(id) {
-            const index = filesList.findIndex(f => f.id === id);
-            if (index !== -1) {
-                const item = filesList[index];
-                if (item.originalData?.src) URL.revokeObjectURL(item.originalData.src);
-                if (item.processedBlob) URL.revokeObjectURL(URL.createObjectURL(item.processedBlob));
-                filesList.splice(index, 1);
-                renderGallery();
-                updateStatusMessage('🗑️ عکس حذف شد');
-            }
-        }
-
-        function updateStatusMessage(msg, type = '') {
-            statusMessage.textContent = msg;
-            statusMessage.className = 'status-msg';
-            if (type) statusMessage.classList.add(type);
-        }
-
-        function downloadSingle(id) {
-            const item = filesList.find(f => f.id === id);
-            if (!item || !item.processedBlob) return;
-
-            // استفاده از نام شخصی‌سازی شده یا الگوی پیش‌فرض
-            const customName = item.customName?.trim() || item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
-            const ext = outputFormat.value.split('/')[1] || 'jpg';
-            
-            downloadDirect(item.processedBlob, `${customName}.${ext}`);
-        }
-
-        function addFiles(files) {
-            let added = 0;
-            for (let f of files) {
-                if (!f.type.startsWith('image/')) continue;
-                if (f.size > 21 * 1024 * 1024) {
-                    updateStatusMessage(`⚠️ ${f.name} بزرگتر از ۲۱ مگابایت است.`, 'error');
-                    continue;
-                }
-                const exists = filesList.some(item => item.file.name === f.name && item.file.size === f.size);
-                if (exists) continue;
-
-                const id = ++idCounter;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const baseName = f.name.replace(/\.[^.]+$/, '');
-                        const item = {
-                            id: id,
-                            file: f,
-                            customName: baseName, // نام پیش‌فرض از فایل
-                            originalData: { 
-                                src: e.target.result, 
-                                img: img, 
-                                width: img.width, 
-                                height: img.height 
-                            },
-                            processedBlob: null,
-                            processedDim: null,
-                            status: 'pending',
-                            name: f.name,
-                            size: f.size
-                        };
-                        filesList.push(item);
-                        renderGallery();
-                        updateStatusMessage(`✅ ${f.name} اضافه شد (${filesList.length} عکس)`, 'success');
-                    };
-                    img.onerror = function() {
-                        updateStatusMessage(`❌ خطا در بارگذاری ${f.name}`, 'error');
-                    };
-                    img.src = e.target.result;
-                };
-                reader.onerror = function() {
-                    updateStatusMessage(`❌ خطا در خواندن ${f.name}`, 'error');
-                };
-                reader.readAsDataURL(f);
-                added++;
-            }
-            if (added === 0 && files.length > 0) {
-                updateStatusMessage('⚠️ هیچ عکس معتبری اضافه نشد.', 'error');
-            }
-        }
-
-        function downloadAll() {
-            const doneItems = filesList.filter(f => (f.status === 'done' || f.status === 'upscaled') && f.processedBlob);
-            if (doneItems.length === 0) {
-                updateStatusMessage('⚠️ هیچ عکس پردازش‌شده‌ای وجود ندارد.', 'error');
-                return;
-            }
-
-            doneItems.forEach((item, idx) => {
-                setTimeout(() => {
-                    const customName = item.customName?.trim() || item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz';
-                    const ext = outputFormat.value.split('/')[1] || 'jpg';
-                    downloadDirect(item.processedBlob, `${customName}.${ext}`);
-                }, idx * 500);
-            });
-
-            updateStatusMessage(`⬇️ دانلود ${doneItems.length} عکس شروع شد.`, 'success');
-        }
-
-        window.saveSettings = function() {
-            const settings = {
-                targetSize: targetSizeKB.value,
-                targetDim: targetDimension.value,
-                crop: cropMode.value,
-                format: outputFormat.value,
-                filter: filterMode.value,
-                upscale: upscaleMode.value,
-                namePattern: namePattern.value
-            };
-            localStorage.setItem('imageForgeSettings', JSON.stringify(settings));
-            updateStatusMessage('💾 تنظیمات ذخیره شد.', 'success');
-        };
-
-        window.loadSettings = function() {
-            const data = localStorage.getItem('imageForgeSettings');
-            if (!data) {
-                updateStatusMessage('⚠️ تنظیمات ذخیره‌شده‌ای یافت نشد.', 'warning');
-                return;
-            }
-            try {
-                const s = JSON.parse(data);
-                targetSizeKB.value = s.targetSize || 70;
-                targetDimension.value = s.targetDim || '800';
-                cropMode.value = s.crop || 'original';
-                outputFormat.value = s.format || 'image/jpeg';
-                filterMode.value = s.filter || 'none';
-                upscaleMode.value = s.upscale || 'none';
-                namePattern.value = s.namePattern || 'mahnaz_{index}';
-                updateStatusMessage('📂 تنظیمات بارگذاری شد.', 'success');
-            } catch(e) {
-                updateStatusMessage('❌ خطا در بارگذاری تنظیمات.', 'error');
-            }
-        };
-
-        // ===== Events =====
-        fileInput.addEventListener('change', function(e) {
-            if (this.files && this.files.length > 0) {
-                addFiles(this.files);
-            }
-            this.value = '';
-        });
-
-        uploadArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.style.borderColor = '#00d4ff';
-        });
-
-        uploadArea.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            this.style.borderColor = '';
-        });
-
-        uploadArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.style.borderColor = '';
-            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                addFiles(e.dataTransfer.files);
-            }
-        });
-
-        processAllBtn.addEventListener('click', processAll);
-        downloadAllBtn.addEventListener('click', downloadAll);
-
-        clearBtn.addEventListener('click', function() {
-            if (filesList.length === 0) return;
-            if (!confirm('آیا مطمئن هستید؟')) return;
-            filesList.forEach(item => {
-                if (item.originalData?.src) URL.revokeObjectURL(item.originalData.src);
-                if (item.processedBlob) URL.revokeObjectURL(URL.createObjectURL(item.processedBlob));
-            });
-            filesList = [];
-            renderGallery();
-            updateStatusMessage('🗑️ همه عکس‌ها پاک شدند.');
-        });
-
-        // ===== Init =====
-        loadSettings();
+        isProcessing = false;
+        processAllBtn.disabled = false;
+        const doneCount = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
+        updateStatusMessage(`✅ ${doneCount} عکس با موفقیت پردازش شد.`, 'success');
         renderGallery();
-        
-        if (!welcomeShown) {
-            setTimeout(showWelcomeMessage, 300);
-            welcomeShown = true;
+
+        if (doneCount > 0) {
+            setTimeout(showSummary, 600);
         }
+    }
+
+    // ===== UI =====
+    function updateProgress() {
+        const total = filesList.length || 1;
+        const done = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
+        progressFill.style.width = (done / total * 100) + '%';
+    }
+
+    function renderGallery() {
+        galleryGrid.innerHTML = '';
+        filesList.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'image-card';
+
+            let statusText = 'در انتظار';
+            let statusClass = '';
+            if (item.status === 'done') { statusText = '✅ پردازش‌شده'; statusClass = 'done'; }
+            else if (item.status === 'upscaled') { statusText = '🔍 بزرگ‌شده'; statusClass = 'upscaled'; }
+            else if (item.status === 'processing') { statusText = '⏳ در حال پردازش'; statusClass = 'processing'; }
+            else if (item.status === 'error') { statusText = '❌ خطا'; statusClass = 'error'; }
+
+            const src = item.originalData?.src || '';
+            const name = item.customName || item.file?.name || 'عکس';
+            const size = item.file ? formatBytes(item.file.size) : '—';
+            const outputSize = item.processedBlob ? formatBytes(item.processedBlob.size) : '—';
+            const outputDim = item.processedDim || '—';
+
+            card.innerHTML = `
+                <div class="img-wrap">
+                    <img src="${src}" alt="${name}" loading="lazy">
+                </div>
+                <div class="card-footer">
+                    <input class="file-name-input" type="text" value="${name}" data-id="${item.id}" placeholder="نام عکس">
+                    <div class="file-meta">
+                        <span class="file-size">${size}</span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    ${item.processedBlob ? `<div style="font-size:0.55rem; opacity:0.7; padding:2px 8px; border-radius:40px; border:1px solid var(--glass-border); text-align:center;">${outputSize} | ${outputDim}</div>` : ''}
+                </div>
+                <div class="btn-group">
+                    ${item.processedBlob ? `<button class="btn-sm compare-btn" data-id="${item.id}">⚖️</button>` : ''}
+                    ${item.processedBlob ? `<button class="btn-sm download" data-id="${item.id}">⬇️</button>` : ''}
+                    ${item.originalData && item.status !== 'processing' ? `<button class="btn-sm upscale-btn" data-id="${item.id}">🔍</button>` : ''}
+                    <button class="btn-sm remove" data-id="${item.id}">✕</button>
+                </div>
+            `;
+            galleryGrid.appendChild(card);
+
+            const nameInput = card.querySelector('.file-name-input');
+            nameInput.addEventListener('input', function() {
+                const id = parseInt(this.dataset.id);
+                const target = filesList.find(f => f.id === id);
+                if (target) target.customName = this.value;
+            });
+
+            card.querySelector('.btn-sm.compare-btn')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openCompare(parseInt(this.dataset.id));
+            });
+
+            card.querySelector('.btn-sm.download')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+                downloadSingle(parseInt(this.dataset.id));
+            });
+
+            card.querySelector('.btn-sm.upscale-btn')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const id = parseInt(this.dataset.id);
+                const item = filesList.find(f => f.id === id);
+                if (item) {
+                    upscaleMode.value = '2x';
+                    processSingleItem(item);
+                }
+            });
+
+            card.querySelector('.btn-sm.remove')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+                removeFile(parseInt(this.dataset.id));
+            });
+        });
+        updateStats();
+    }
+
+    function updateStats() {
+        totalCount.textContent = filesList.length;
+        const totalBytes = filesList.reduce((sum, item) => sum + (item.file ? item.file.size : 0), 0);
+        totalSize.textContent = formatBytes(totalBytes);
+        const done = filesList.filter(f => f.status === 'done' || f.status === 'upscaled').length;
+        processedCount.textContent = done;
+
+        let totalBefore = 0, totalAfter = 0;
+        filesList.forEach(f => {
+            if (f.processedBlob) {
+                totalBefore += f.file.size;
+                totalAfter += f.processedBlob.size;
+            }
+        });
+        reductionPercent.textContent = totalBefore > 0 ? ((1 - totalAfter / totalBefore) * 100).toFixed(1) + '%' : '0%';
+
+        processAllBtn.disabled = filesList.length === 0 || isProcessing;
+        const hasDone = done > 0;
+        downloadAllBtn.disabled = !hasDone || isProcessing;
+        zipBtn.disabled = !hasDone || isProcessing;
+        summaryBtn.disabled = !hasDone;
+        updateProgress();
+    }
+
+    function removeFile(id) {
+        const index = filesList.findIndex(f => f.id === id);
+        if (index !== -1) {
+            filesList.splice(index, 1);
+            renderGallery();
+            updateStatusMessage('🗑️ عکس حذف شد');
+        }
+    }
+
+    function updateStatusMessage(msg, type) {
+        statusMessage.textContent = msg;
+        statusMessage.className = 'status-msg';
+        if (type) statusMessage.classList.add(type);
+    }
+
+    function downloadSingle(id) {
+        const item = filesList.find(f => f.id === id);
+        if (!item || !item.processedBlob) return;
+        const customName = (item.customName?.trim() || item.file.name.replace(/\.[^.]+$/, '') || 'mahnaz')
+            .replace(/[<>:"/\\|?*]/g, '_');
+        const ext = outputFormat.value.split('/')[1] || 'jpg';
+        downloadDirect(item.processedBlob, `${customName}.${ext}`);
+    }
+
+    function downloadAll() {
+        const doneItems = filesList.filter(f => (f.status === 'done' || f.status === 'upscaled') && f.processedBlob);
+        if (doneItems.length === 0) {
+            updateStatusMessage('⚠️ هیچ عکس پردازش‌شده‌ای وجود ندارد.', 'error');
+            return;
+        }
+        doneItems.forEach((item, idx) => {
+            setTimeout(() => {
+                const customName = (item.customName?.trim() || 'mahnaz_' + (idx + 1))
+                    .replace(/[<>:"/\\|?*]/g, '_');
+                const ext = outputFormat.value.split('/')[1] || 'jpg';
+                downloadDirect(item.processedBlob, `${customName}.${ext}`, true);
+            }, idx * 400);
+        });
+        updateStatusMessage(`⬇️ دانلود ${doneItems.length} عکس شروع شد.`, 'success');
+    }
+
+    async function downloadZip() {
+        if (typeof JSZip === 'undefined') {
+            updateStatusMessage('⚠️ کتابخانه ZIP بارگذاری نشد. اتصال اینترنت را بررسی کن.', 'error');
+            return;
+        }
+        const doneItems = filesList.filter(f => f.processedBlob);
+        if (doneItems.length === 0) {
+            updateStatusMessage('⚠️ هیچ عکس پردازش‌شده‌ای برای ZIP وجود ندارد.', 'error');
+            return;
+        }
+
+        updateStatusMessage(`📦 در حال ساخت ZIP (${doneItems.length} عکس)...`);
+        zipBtn.disabled = true;
+
+        try {
+            const zip = new JSZip();
+            const ext = outputFormat.value.split('/')[1] || 'jpg';
+            const usedNames = new Set();
+
+            doneItems.forEach((item, i) => {
+                let base = (item.customName?.trim() || `mahnaz_${i + 1}`).replace(/[<>:"/\\|?*]/g, '_');
+                if (!base) base = `mahnaz_${i + 1}`;
+                let name = `${base}.${ext}`;
+                let counter = 1;
+                while (usedNames.has(name)) {
+                    name = `${base}_${counter++}.${ext}`;
+                }
+                usedNames.add(name);
+                zip.file(name, item.processedBlob);
+            });
+
+            const blob = await zip.generateAsync(
+                { type: 'blob', compression: 'STORE' },
+                (meta) => {
+                    progressFill.style.width = meta.percent + '%';
+                }
+            );
+
+            downloadDirect(blob, `mahnaz-images-${Date.now()}.zip`, true);
+            updateStatusMessage(`✅ فایل ZIP آماده شد (${formatBytes(blob.size)}) — دانلود شروع شد.`, 'success');
+        } catch (e) {
+            console.error(e);
+            updateStatusMessage('❌ خطا در ساخت ZIP', 'error');
+        } finally {
+            zipBtn.disabled = false;
+            updateProgress();
+        }
+    }
+
+    function showSummary() {
+        const done = filesList.filter(f => f.processedBlob);
+        if (done.length === 0) {
+            updateStatusMessage('⚠️ هنوز عکسی پردازش نشده است.', 'warning');
+            return;
+        }
+
+        let totalBefore = 0, totalAfter = 0;
+        done.forEach(f => {
+            totalBefore += f.file.size;
+            totalAfter += f.processedBlob.size;
+        });
+        const reduction = totalBefore > 0 ? ((1 - totalAfter / totalBefore) * 100).toFixed(1) : '0';
+        const avgSize = totalAfter / done.length;
+
+        document.getElementById('summaryContent').innerHTML = `
+            <div class="summary-grid">
+                <div class="summary-stat">
+                    <div class="summary-value">${done.length}</div>
+                    <div class="summary-label">عکس پردازش شد</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-value">${formatBytes(totalBefore)}</div>
+                    <div class="summary-label">حجم قبل</div>
+                </div>
+                <div class="summary-stat highlight">
+                    <div class="summary-value">${formatBytes(totalAfter)}</div>
+                    <div class="summary-label">حجم بعد</div>
+                </div>
+                <div class="summary-stat success">
+                    <div class="summary-value">${reduction}%</div>
+                    <div class="summary-label">کاهش حجم</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-value">${formatBytes(avgSize)}</div>
+                    <div class="summary-label">میانگین هر عکس</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="summary-value">${filesList.length}</div>
+                    <div class="summary-label">کل عکس‌ها</div>
+                </div>
+            </div>
+            <div class="summary-msg">
+                🎉 آفرین مهناز جون! ${done.length} عکس با موفقیت فشرده شد و ${reduction}% صرفه‌جویی در حجم داشتی. ✨
+            </div>
+        `;
+        document.getElementById('summaryModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // ===== Compare =====
+    function setComparePos(pct) {
+        pct = Math.max(2, Math.min(98, pct));
+        document.getElementById('compareContainer').style.setProperty('--pos', pct + '%');
+    }
+
+    function openCompare(id) {
+        const item = filesList.find(f => f.id === id);
+        if (!item || !item.processedBlob) return;
+
+        if (compareObjectUrl) URL.revokeObjectURL(compareObjectUrl);
+        compareObjectUrl = URL.createObjectURL(item.processedBlob);
+
+        const container = document.getElementById('compareContainer');
+        const beforeImg = document.getElementById('compareBefore');
+        const afterImg = document.getElementById('compareAfter');
+
+        beforeImg.src = item.originalData.src;
+        afterImg.src = compareObjectUrl;
+
+        if (item.processedDim && item.processedDim !== '—') {
+            const parts = item.processedDim.split('×');
+            if (parts.length === 2) {
+                container.style.aspectRatio = `${parts[0]} / ${parts[1]}`;
+            }
+        } else {
+            container.style.aspectRatio = '1 / 1';
+        }
+
+        const reduction = ((item.file.size - item.processedBlob.size) / item.file.size * 100).toFixed(1);
+        document.getElementById('compareInfo').innerHTML = `
+            <span>📷 قبل: ${formatBytes(item.file.size)}</span>
+            <span>✨ بعد: ${formatBytes(item.processedBlob.size)}</span>
+            <span>📊 کاهش: ${reduction}%</span>
+            <span>📐 ${item.processedDim || '—'}</span>
+        `;
+
+        setComparePos(50);
+        document.getElementById('compareModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCompare() {
+        document.getElementById('compareModal').classList.remove('active');
+        document.body.style.overflow = '';
+        if (compareObjectUrl) {
+            URL.revokeObjectURL(compareObjectUrl);
+            compareObjectUrl = null;
+        }
+    }
+
+    function closeSummary() {
+        document.getElementById('summaryModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Compare drag
+    (function initCompareSlider() {
+        const container = document.getElementById('compareContainer');
+        let dragging = false;
+
+        function updatePos(e) {
+            const rect = container.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const x = clientX - rect.left;
+            const pct = (x / rect.width) * 100;
+            setComparePos(pct);
+        }
+
+        container.addEventListener('mousedown', (e) => { dragging = true; updatePos(e); e.preventDefault(); });
+        container.addEventListener('touchstart', (e) => { dragging = true; updatePos(e); }, { passive: true });
+        window.addEventListener('mousemove', (e) => { if (dragging) updatePos(e); });
+        window.addEventListener('touchmove', (e) => { if (dragging) updatePos(e); }, { passive: true });
+        window.addEventListener('mouseup', () => { dragging = false; });
+        window.addEventListener('touchend', () => { dragging = false; });
     })();
+
+    // ===== Add Files =====
+    function addFiles(files) {
+        let added = 0;
+        for (const f of files) {
+            if (!f.type.startsWith('image/')) continue;
+            if (f.size > 25 * 1024 * 1024) {
+                updateStatusMessage(`⚠️ ${f.name} بزرگتر از ۲۵ مگابایت است.`, 'error');
+                continue;
+            }
+            const exists = filesList.some(item => item.file.name === f.name && item.file.size === f.size);
+            if (exists) continue;
+
+            const id = ++idCounter;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const baseName = f.name.replace(/\.[^.]+$/, '');
+                    filesList.push({
+                        id, file: f, customName: baseName,
+                        originalData: {
+                            src: e.target.result, img,
+                            width: img.width, height: img.height
+                        },
+                        processedBlob: null, processedDim: null,
+                        status: 'pending', name: f.name, size: f.size
+                    });
+                    renderGallery();
+                    updateStatusMessage(`✅ ${f.name} اضافه شد (${filesList.length} عکس)`, 'success');
+                };
+                img.onerror = function() {
+                    updateStatusMessage(`❌ خطا در بارگذاری ${f.name}`, 'error');
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                updateStatusMessage(`❌ خطا در خواندن ${f.name}`, 'error');
+            };
+            reader.readAsDataURL(f);
+            added++;
+        }
+        if (added === 0 && files.length > 0) {
+            updateStatusMessage('⚠️ هیچ عکس معتبری اضافه نشد.', 'error');
+        }
+    }
+
+    // ===== Presets =====
+    const PRESETS = {
+        instagram: { size: 200, dim: '1024', crop: '1:1', format: 'image/jpeg', filter: 'none', upscale: 'none' },
+        story: { size: 150, dim: '1024', crop: '9:16', format: 'image/webp', filter: 'none', upscale: 'none' },
+        profile: { size: 70, dim: '400', crop: '1:1', format: 'image/jpeg', filter: 'none', upscale: 'none' },
+        web: { size: 100, dim: '800', crop: 'original', format: 'image/webp', filter: 'none', upscale: 'none' },
+        print: { size: 2000, dim: '2048', crop: 'original', format: 'image/jpeg', filter: 'none', upscale: 'none' }
+    };
+
+    document.querySelectorAll('.preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const p = PRESETS[btn.dataset.preset];
+            if (!p) return;
+            targetSizeKB.value = p.size;
+            targetDimension.value = p.dim;
+            cropMode.value = p.crop;
+            outputFormat.value = p.format;
+            filterMode.value = p.filter;
+            upscaleMode.value = p.upscale;
+            document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateStatusMessage(`✨ پریست «${btn.textContent.trim()}» اعمال شد.`, 'success');
+        });
+    });
+
+    // ===== Save / Load =====
+    window.saveSettings = function() {
+        const settings = {
+            targetSize: targetSizeKB.value,
+            targetDim: targetDimension.value,
+            crop: cropMode.value,
+            format: outputFormat.value,
+            filter: filterMode.value,
+            upscale: upscaleMode.value
+        };
+        localStorage.setItem('imageForgeSettings', JSON.stringify(settings));
+        updateStatusMessage('💾 تنظیمات ذخیره شد.', 'success');
+    };
+
+    window.loadSettings = function() {
+        const data = localStorage.getItem('imageForgeSettings');
+        if (!data) {
+            updateStatusMessage('⚠️ تنظیمات ذخیره‌شده‌ای یافت نشد.', 'warning');
+            return;
+        }
+        try {
+            const s = JSON.parse(data);
+            targetSizeKB.value = s.targetSize || 70;
+            targetDimension.value = s.targetDim || '800';
+            cropMode.value = s.crop || 'original';
+            outputFormat.value = s.format || 'image/jpeg';
+            filterMode.value = s.filter || 'none';
+            upscaleMode.value = s.upscale || 'none';
+            updateStatusMessage('📂 تنظیمات بارگذاری شد.', 'success');
+        } catch (e) {
+            updateStatusMessage('❌ خطا در بارگذاری تنظیمات.', 'error');
+        }
+    };
+
+    // ===== Events =====
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) addFiles(this.files);
+        this.value = '';
+    });
+
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#00d4ff';
+    });
+
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '';
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '';
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            addFiles(e.dataTransfer.files);
+        }
+    });
+
+    // Paste from clipboard
+    document.addEventListener('paste', function(e) {
+        if (!e.clipboardData) return;
+        const items = e.clipboardData.items;
+        const imageFiles = [];
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') === 0) {
+                const file = items[i].getAsFile();
+                if (file) imageFiles.push(file);
+            }
+        }
+        if (imageFiles.length > 0) {
+            addFiles(imageFiles);
+            updateStatusMessage(`📋 ${imageFiles.length} عکس از کلیپ‌بورد اضافه شد.`, 'success');
+        }
+    });
+
+    processAllBtn.addEventListener('click', processAll);
+    downloadAllBtn.addEventListener('click', downloadAll);
+    zipBtn.addEventListener('click', downloadZip);
+    summaryBtn.addEventListener('click', showSummary);
+
+    clearBtn.addEventListener('click', function() {
+        if (filesList.length === 0) return;
+        if (!confirm('آیا مطمئن هستید؟ همه عکس‌ها پاک می‌شوند.')) return;
+        filesList = [];
+        renderGallery();
+        updateStatusMessage('🗑️ همه عکس‌ها پاک شدند.');
+    });
+
+    // ESC to close modals
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeCompare();
+            closeSummary();
+        }
+    });
+
+    // Click outside to close
+    document.getElementById('compareModal').addEventListener('click', function(e) {
+        if (e.target === this) closeCompare();
+    });
+    document.getElementById('summaryModal').addEventListener('click', function(e) {
+        if (e.target === this) closeSummary();
+    });
+
+    // Expose close functions globally
+    window.closeCompare = closeCompare;
+    window.closeSummary = closeSummary;
+
+    // ===== Init =====
+    loadSettings();
+    renderGallery();
+    setTimeout(showWelcomeMessage, 400);
+})();
 </script>
 
 </body>
